@@ -19,9 +19,16 @@ class Connector:
                 target.trigger(value)
         
 
-
 class Input:
-    pass
+    def __init__(self, name, parent, debug = False) -> None:
+        pass
+    def trigger(self, value) -> None: 
+        pass
+
 
 class Gate:
-    pass
+    def __init__(self) -> None:
+        pass
+
+    def evaluate(self) -> None:
+        pass
