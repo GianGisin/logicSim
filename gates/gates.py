@@ -9,7 +9,7 @@ class Connector:
     def connect(self, to) -> None:
         self.targets.append(to)
 
-    def send(self, value: bool) -> None:
+    def send(self, value) -> None:
         if self.state == value:
             return
         else:
@@ -41,3 +41,20 @@ class Gate:
 
     def evaluate(self) -> None:
         return
+    
+
+class And_Gate(Gate):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def evaluate(self) -> None:
+        self.Q.send(self.A.value and self.B.value)
+
+
+class Or_Gate(Gate):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def evaluate(self) -> None:
+        self.Q.send(self.A.value or self.B.value)
+
