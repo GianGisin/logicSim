@@ -14,7 +14,7 @@ class Connector:
             return
         else:
             if self.debug:
-                print("Connector now has value: " + str(self.state))
+                print("Connector now has value: " + str(value) + " compared to before: " + str(self.state))
                 
             self.state = value
 
@@ -72,5 +72,3 @@ class Or_Gate(Gate):
 
 def test_func():
     return 3
-
-
