@@ -41,7 +41,14 @@ class Gate:
 
     def evaluate(self) -> None:
         return
-    
+
+class Not_Gate:
+    def __init__(self) -> None:
+        self.A = Input('A', self)
+        self.Q = Connector('Q')
+
+    def evaluate(self) -> None:
+        self.Q.send(not self.A.value)
 
 class And_Gate(Gate):
     def __init__(self) -> None:
