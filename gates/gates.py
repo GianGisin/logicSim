@@ -21,14 +21,23 @@ class Connector:
 
 class Input:
     def __init__(self, name, parent, debug = False) -> None:
-        pass
+        self.value = None
+        self.parent = parent
+
     def trigger(self, value) -> None: 
-        pass
+        if self.value == value:
+            return
+        else:
+            self.value = value
+            self.parent.evaluate()
 
 
 class Gate:
     def __init__(self) -> None:
-        pass
+        self.A = Input('A', self)
+        self.B = Input('B', self)
+
+        self.Q = Connector('Q')
 
     def evaluate(self) -> None:
-        pass
+        return
