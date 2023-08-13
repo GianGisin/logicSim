@@ -13,6 +13,9 @@ class Connector:
         if self.state == value:
             return
         else:
+            if self.debug:
+                print("Connector now has value: " + str(self.state))
+                
             self.state = value
 
             for target in self.targets:
@@ -37,7 +40,7 @@ class Gate:
         self.A = Input('A', self)
         self.B = Input('B', self)
 
-        self.Q = Connector('Q')
+        self.Q = Connector('Q', debug=True)
 
     def evaluate(self) -> None:
         return
@@ -64,4 +67,10 @@ class Or_Gate(Gate):
 
     def evaluate(self) -> None:
         self.Q.send(self.A.value or self.B.value)
+
+
+
+def test_func():
+    return 3
+
 
