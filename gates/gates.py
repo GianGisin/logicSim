@@ -69,3 +69,25 @@ class Or_Gate(Gate):
         self.Q.send(self.A.value or self.B.value)
 
 
+class Xor_Gate(Gate):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def evaluate(self) -> None:
+        self.Q.send(self.A.value != self.B.value)
+
+
+class Nor_Gate(Gate):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def evaluate(self) -> None:
+        self.Q.send(not(self.A.value or self.B.value))
+
+
+class Nand_Gate(Gate):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def evaluate(self) -> None:
+        self.Q.send(not(self.A.value and self.B.value))
