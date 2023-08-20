@@ -69,6 +69,3 @@ class Or_Gate(Gate):
         self.Q.send(self.A.value or self.B.value)
 
 
-
-def test_func():
-    return 3
