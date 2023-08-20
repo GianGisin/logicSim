@@ -2,6 +2,14 @@ import unittest
 from gates.gates import *
 
 class Gates_test(unittest.TestCase):
+    def test_not(self):
+        gate = Not_Gate()
+        gate.A.trigger(False)
+        self.assertEqual(gate.Q.state, True)
+
+        gate.A.trigger(True)
+        self.assertEqual(gate.Q.state, False)
+    
     def test_and(self):
         gate = And_Gate()
 
