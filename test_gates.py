@@ -42,7 +42,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, True)
 
     def test_xor(self):
-        gate = Or_Gate()
+        gate = Xor_Gate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -57,7 +57,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, False)
 
     def test_nand(self):
-        gate = And_Gate()
+        gate = Nand_Gate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -72,7 +72,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, False)
     
     def test_nor(self):
-        gate = Or_Gate()
+        gate = Nor_Gate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
