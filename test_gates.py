@@ -4,6 +4,7 @@ from gates.gates import *
 class Gates_test(unittest.TestCase):
     def test_not(self):
         gate = Not_Gate()
+
         gate.A.trigger(False)
         self.assertEqual(gate.Q.state, True)
 
@@ -40,7 +41,49 @@ class Gates_test(unittest.TestCase):
         gate.B.trigger(True)
         self.assertEqual(gate.Q.state, True)
 
-        
+    def test_xor(self):
+        gate = Or_Gate()
 
+        gate.A.trigger(False)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, False)
+
+        gate.A.trigger(True)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, True)
+
+        gate.A.trigger(True)
+        gate.B.trigger(True)
+        self.assertEqual(gate.Q.state, False)
+
+    def test_nand(self):
+        gate = And_Gate()
+
+        gate.A.trigger(False)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, True)
+
+        gate.A.trigger(True)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, True)
+
+        gate.A.trigger(True)
+        gate.B.trigger(True)
+        self.assertEqual(gate.Q.state, False)
+    
+    def test_nor(self):
+        gate = Or_Gate()
+
+        gate.A.trigger(False)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, True)
+
+        gate.A.trigger(True)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, False)
+
+        gate.A.trigger(True)
+        gate.B.trigger(True)
+        self.assertEqual(gate.Q.state, False)
 
 unittest.main()
