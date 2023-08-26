@@ -109,6 +109,12 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(g_xor.Q.state, True)
         self.assertEqual(g_and.Q.state, False)
 
+        B.send(False)
+        self.assertEqual(g_xor.Q.state, False)
+        self.assertEqual(g_and.Q.state, False)
+
+
+
         
 
 unittest.main()
