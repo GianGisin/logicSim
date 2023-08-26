@@ -86,4 +86,29 @@ class Gates_test(unittest.TestCase):
         gate.B.trigger(True)
         self.assertEqual(gate.Q.state, False)
 
+    def test_half_adder(self):
+        g_xor = Xor_Gate() # sum bit
+        g_and = And_Gate() # carry bit
+
+        A = Connector("input A")
+        A.connect(g_xor.A)
+        A.connect(g_and.A)
+
+        B = Connector("input B")
+        B.connect(g_xor.B)
+        B.connect(g_and.B)
+
+        A.send(True)
+        B.send(True)
+
+        self.assertEqual(g_xor.Q.state, False)
+        self.assertEqual(g_and.Q.state, True)
+
+        A.send(False)
+
+        self.assertEqual(g_xor.Q.state, True)
+        self.assertEqual(g_and.Q.state, False)
+
+        
+
 unittest.main()
