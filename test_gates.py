@@ -113,6 +113,30 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(g_xor.Q.state, False)
         self.assertEqual(g_and.Q.state, False)
 
+    def test_full_adder(self):
+        # initialize gates
+        g_xor = Xor_Gate()
+        g_sum = Xor_Gate()
+        g_carry = Or_Gate()
+        g_and1 = And_Gate()
+        g_and2 = And_Gate()
+
+        # initialize Inputs
+        A = Connector("Input A")
+        B = Connector("Input B")
+        C = Connector("Input Cin")
+
+        A.connect(g_xor.A)
+        A.connect(g_and1.A)
+        B.connect(g_xor.B)
+        B.connect(g_and1.B)
+        C.connect(g_sum.B)
+        C.connect(g_and2.B)
+
+        g_xor.Q.connect(g_sum.A)
+        g_xor.Q.connect(g_and2.A)
+        g_and1.Q.connect(g_carry.B)
+        g_and2.Q.connect(g_carry.A)
 
 
         
