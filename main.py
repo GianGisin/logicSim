@@ -11,7 +11,25 @@ def toolbar_event(*args):
             case 1:
                 bborder.configure(highlightbackground="white")
                 cborder.configure(highlightbackground="blue")
-                
+
+class Line:
+    x = -1
+    y = -1
+    
+    def reset(self):
+        self.x = -1
+        self.y = -1
+
+l = Line()
+
+def setPoint(event):
+    print(f"x: {event.x}\ny: {event.y}")
+    if l.x == -1:
+        l.x = event.x
+        l.y = event.y
+    else:
+        canvas.create_line(l.x, l.y, event.x, event.y, width=3)
+        l.reset()
 
 root = Tk()
 
@@ -47,6 +65,7 @@ toolbar.grid(column=0, row=0, sticky="new")
 
 canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
+canvas.bind("<Button-1>", setPoint)
 
 gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
