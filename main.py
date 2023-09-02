@@ -45,7 +45,7 @@ mainframe.rowconfigure(1, weight=1)
 toolbar = ttk.Frame(mainframe, relief=RAISED, borderwidth=2)
 toolbar.grid(column=0, row=0, sticky="new")
 
-canvas = Canvas(mainframe, background="red")
+canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 
 gateselect = ttk.Combobox(toolbar)
