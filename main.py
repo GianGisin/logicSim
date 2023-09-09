@@ -14,13 +14,11 @@ def draw_gate(x, y):
 def toolbar_event(*args):
     print("toolbar event")
     if len(args) != 0:
-        match args[0]:
-            case 0:
-                bborder.configure(background="blue")
-                cborder.configure(background="grey75")
-            case 1:
-                bborder.configure(background="grey75")
-                cborder.configure(background="blue")
+        for border in borders:
+            border.configure(background="grey75")
+        
+        borders[args[0]].configure(background="blue")
+
 
 class Line:
     x = -1
@@ -45,6 +43,8 @@ root = Tk()
 
 cursor = PhotoImage(file="img/pointer.png")
 pen = PhotoImage(file="img/pen.png")
+gate_icon = PhotoImage(file="img/gate-icon.png")
+
 img = Image.open("img/gate.png")
 img = img.resize((100,75))
 gate = ImageTk.PhotoImage(img)
@@ -81,22 +81,33 @@ canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", setPoint)
 
 draw_gate(200, 200)
+draw_gate(400, 400)
 
 gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
 gateselect.state(['readonly'])
 gateselect.set('NOT')
-gateselect.grid(column=3, row=1)
+gateselect.grid(column=4, row=1)
 
+
+borders = []
 
 bborder = Frame(toolbar, background="grey75", bd=2)
 bborder.grid(column=1, row=1)
+borders.append(bborder)
 b = ttk.Button(bborder, image=cursor, text="cursor", command=lambda: toolbar_event(0))
 b.pack()
 
 cborder = Frame(toolbar, background="grey75", bd=2)
 cborder.grid(column=2, row=1)
+borders.append(cborder)
 c = ttk.Button(cborder, image=pen, text="pen", command=lambda: toolbar_event(1))
 c.pack()
+
+dborder = Frame(toolbar, background="grey75", bd=2)
+dborder.grid(column=3, row=1)
+borders.append(dborder)
+d = ttk.Button(dborder, image=gate_icon, text="gate", command=lambda: toolbar_event(2))
+d.pack()
 
 root.mainloop()
