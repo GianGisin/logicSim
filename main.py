@@ -16,11 +16,11 @@ def toolbar_event(*args):
     if len(args) != 0:
         match args[0]:
             case 0:
-                bborder.configure(highlightbackground="blue")
-                cborder.configure(highlightbackground="white")
+                bborder.configure(background="blue")
+                cborder.configure(background="grey75")
             case 1:
-                bborder.configure(highlightbackground="white")
-                cborder.configure(highlightbackground="blue")
+                bborder.configure(background="grey75")
+                cborder.configure(background="blue")
 
 class Line:
     x = -1
@@ -89,14 +89,14 @@ gateselect.set('NOT')
 gateselect.grid(column=3, row=1)
 
 
-bborder = Frame(toolbar, highlightbackground="white", highlightthickness=2, bd=0)
+bborder = Frame(toolbar, background="grey75", bd=2)
 bborder.grid(column=1, row=1)
-b = Button(bborder, image=cursor, text="cursor", command=lambda: toolbar_event(0))
+b = ttk.Button(bborder, image=cursor, text="cursor", command=lambda: toolbar_event(0))
 b.pack()
 
-cborder = Frame(toolbar, highlightbackground="white", highlightthickness=2, bd=0)
+cborder = Frame(toolbar, background="grey75", bd=2)
 cborder.grid(column=2, row=1)
-c = Button(cborder, image=pen, text="pen", command=lambda: toolbar_event(1), background="blue")
+c = ttk.Button(cborder, image=pen, text="pen", command=lambda: toolbar_event(1))
 c.pack()
 
 root.mainloop()
