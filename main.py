@@ -11,13 +11,17 @@ def draw_gate(x, y):
     canvas.create_oval(x-50-radius, y-radius+y_offset, x-50+radius, y+radius+y_offset, fill="red")
     canvas.create_oval(x-50-radius, y-radius-y_offset, x-50+radius, y+radius-y_offset, fill="red")
 
+current_tool = 0
+
 def toolbar_event(*args):
-    print("toolbar event")
+    global current_tool
     if len(args) != 0:
         for border in borders:
             border.configure(background="grey75")
         
+        current_tool = args[0]
         borders[args[0]].configure(background="blue")
+        print(f"toolbar event, tool {current_tool} selected.")
 
 
 class Line:
@@ -92,7 +96,7 @@ gateselect.grid(column=4, row=1)
 
 borders = []
 
-bborder = Frame(toolbar, background="grey75", bd=2)
+bborder = Frame(toolbar, background="blue", bd=2)
 bborder.grid(column=1, row=1)
 borders.append(bborder)
 b = ttk.Button(bborder, image=cursor, text="cursor", command=lambda: toolbar_event(0))
