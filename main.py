@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk, messagebox
+from PIL import Image, ImageTk
 
 def toolbar_event(*args):
     print("toolbar event")
@@ -35,6 +36,9 @@ root = Tk()
 
 cursor = PhotoImage(file="img/pointer.png")
 pen = PhotoImage(file="img/pen.png")
+img = Image.open("img/gate.png")
+img = img.resize((100,75))
+gate = ImageTk.PhotoImage(img)
 
 root.iconphoto(False, cursor)
 root.title("logicSim")
@@ -66,6 +70,7 @@ toolbar.grid(column=0, row=0, sticky="new")
 canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", setPoint)
+canvas.create_image(100, 100, image=gate)
 
 gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
