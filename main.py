@@ -2,6 +2,15 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
+
+def draw_gate(x, y):
+    radius = 5
+    y_offset = 20
+    canvas.create_image(x, y, image=gate)
+    canvas.create_oval(x+50-radius, y-radius, x+50+radius, y+radius, fill="red")
+    canvas.create_oval(x-50-radius, y-radius+y_offset, x-50+radius, y+radius+y_offset, fill="red")
+    canvas.create_oval(x-50-radius, y-radius-y_offset, x-50+radius, y+radius-y_offset, fill="red")
+
 def toolbar_event(*args):
     print("toolbar event")
     if len(args) != 0:
@@ -70,7 +79,8 @@ toolbar.grid(column=0, row=0, sticky="new")
 canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", setPoint)
-canvas.create_image(100, 100, image=gate)
+
+draw_gate(200, 200)
 
 gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
