@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk, PhotoImage, Menu, Frame, Canvas
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
@@ -72,7 +72,7 @@ gate = ImageTk.PhotoImage(img)
 root.iconphoto(False, cursor)
 root.title("logicSim")
 root.geometry("500x500")
-root.option_add('*tearOff', FALSE)
+root.option_add('*tearOff', False)
 
 m = Menu(root)
 m_edit = Menu(m)
@@ -93,7 +93,7 @@ mainframe.columnconfigure(0, weight=1)
 # mainframe.rowconfigure(0, weight=1)
 mainframe.rowconfigure(1, weight=1)
 
-toolbar = ttk.Frame(mainframe, relief=RAISED, borderwidth=2)
+toolbar = ttk.Frame(mainframe, relief="raised", borderwidth=2)
 toolbar.grid(column=0, row=0, sticky="new")
 
 canvas = Canvas(mainframe, background="grey75")
