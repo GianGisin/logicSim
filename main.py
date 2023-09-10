@@ -13,6 +13,9 @@ def draw_gate(x, y):
 
 current_tool = 0
 
+def TODO(st):
+    print(f"TODO {st}")
+
 def toolbar_event(*args):
     global current_tool
     if len(args) != 0:
@@ -34,20 +37,33 @@ class Line:
 
 l = Line()
 
-def setPoint(event):
-    print(f"x: {event.x}\ny: {event.y}")
-    if l.x == -1:
-        l.x = event.x
-        l.y = event.y
-    else:
-        canvas.create_line(l.x, l.y, event.x, event.y, width=3)
-        l.reset()
+def leftclick_event(event):
+    print(f"leftclick with tool {current_tool}")
+    match current_tool:
+        case 0:
+            # pointer tool selected
+            TODO("handle pointer click")
+        case 1:
+            # draw tool selected
+            print(f"x: {event.x}\ny: {event.y}")
+            if l.x == -1:
+                l.x = event.x
+                l.y = event.y
+            else:
+                canvas.create_line(l.x, l.y, event.x, event.y, width=3)
+                l.reset()
+            
+        case 2:
+            # gate tool selected
+            TODO("handle gate click")
+            # check selected tool from gateselect
+        
 
 root = Tk()
 
-cursor = PhotoImage(file="img/pointer.png")
-pen = PhotoImage(file="img/pen.png")
-gate_icon = PhotoImage(file="img/gate-icon.png")
+cursor = PhotoImage(file="img/toolbar_icons/pointer.png")
+pen = PhotoImage(file="img/toolbar_icons/pen.png")
+gate_icon = PhotoImage(file="img/toolbar_icons/gate-icon.png")
 
 img = Image.open("img/gate.png")
 img = img.resize((100,75))
@@ -57,7 +73,7 @@ root.iconphoto(False, cursor)
 root.title("logicSim")
 root.geometry("500x500")
 root.option_add('*tearOff', FALSE)
-# root.attributes("-alpha", 0.5)
+
 m = Menu(root)
 m_edit = Menu(m)
 m_save = Menu(m)
@@ -82,7 +98,7 @@ toolbar.grid(column=0, row=0, sticky="new")
 
 canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
-canvas.bind("<Button-1>", setPoint)
+canvas.bind("<Button-1>", leftclick_event)
 
 draw_gate(200, 200)
 draw_gate(400, 400)
