@@ -60,7 +60,6 @@ def leftclick_event(event):
         
 
 root = Tk()
-
 cursor = PhotoImage(file="img/toolbar_icons/pointer.png")
 pen = PhotoImage(file="img/toolbar_icons/pen.png")
 gate_icon = PhotoImage(file="img/toolbar_icons/gate-icon.png")
@@ -69,11 +68,15 @@ img = Image.open("img/gate.png")
 img = img.resize((100,75))
 gate = ImageTk.PhotoImage(img)
 
+# initialize main window
 root.iconphoto(False, cursor)
 root.title("logicSim")
 root.geometry("500x500")
 root.option_add('*tearOff', False)
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
 
+# initialize menubar
 m = Menu(root)
 m_edit = Menu(m)
 m_save = Menu(m)
@@ -87,10 +90,7 @@ root['menu'] = m
 
 mainframe = ttk.Frame(root)
 mainframe.grid(column=0, row=0, sticky="nsew")
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
 mainframe.columnconfigure(0, weight=1)
-# mainframe.rowconfigure(0, weight=1)
 mainframe.rowconfigure(1, weight=1)
 
 toolbar = ttk.Frame(mainframe, relief="raised", borderwidth=2)
