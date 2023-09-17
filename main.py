@@ -1,12 +1,24 @@
+# from enum import Enum
 from tkinter import Tk, PhotoImage, Menu, Frame, Canvas
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
+GATE_NAMES = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
 
-def draw_gate(x, y):
+# class GateType(Enum):
+#     NOT = 0
+#     AND = 1
+#     OR = 2
+#     XOR = 3
+#     NAND = 4
+#     NOR = 5
+#     XNOR = 6
+
+
+def draw_gate(x, y, gate_type):
     radius = 5
     y_offset = 20
-    canvas.create_image(x, y, image=gate)
+    canvas.create_image(x, y, image=gate_images[gate_type])
     canvas.create_oval(x+50-radius, y-radius, x+50+radius, y+radius, fill="red")
     canvas.create_oval(x-50-radius, y-radius+y_offset, x-50+radius, y+radius+y_offset, fill="red")
     canvas.create_oval(x-50-radius, y-radius-y_offset, x-50+radius, y+radius-y_offset, fill="red")
@@ -38,7 +50,7 @@ class Line:
 l = Line()
 
 def leftclick_event(event):
-    print(f"leftclick with tool {current_tool}")
+    print(f"leftclick with tool {current_tool}\n")
     match current_tool:
         case 0:
             # pointer tool selected
@@ -57,16 +69,42 @@ def leftclick_event(event):
             # gate tool selected
             TODO("handle gate click")
             # check selected tool from gateselect
+            # ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
+
+            current_selection = gateselect.get()
+            print(current_selection + "\n")
+            match current_selection:
+                case 'NOT':
+                    pass
+                case 'AND': 
+                    pass
+                case 'OR': 
+                    pass
+                case 'XOR': 
+                    pass
+                case 'NAND': 
+                    pass
+                case 'NOR': 
+                    pass
+                case 'XNOR': 
+                    pass
         
+def combobox_event(event):
+    gateselect.selection_clear()
 
 root = Tk()
 cursor = PhotoImage(file="img/toolbar_icons/pointer.png")
 pen = PhotoImage(file="img/toolbar_icons/pen.png")
 gate_icon = PhotoImage(file="img/toolbar_icons/gate-icon.png")
 
-img = Image.open("img/gate.png")
-img = img.resize((100,75))
-gate = ImageTk.PhotoImage(img)
+gate_images = []
+
+for gate in GATE_NAMES:
+    path_string = "img/gate_img/GATE_" + gate + ".png"
+    print(path_string)
+    img = Image.open(path_string)
+    img = img.resize((100,75))
+    gate_images.append(ImageTk.PhotoImage(img)) 
 
 # initialize main window
 root.iconphoto(False, cursor)
@@ -100,15 +138,15 @@ canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", leftclick_event)
 
-draw_gate(200, 200)
-draw_gate(400, 400)
+draw_gate(200, 200, 1)
+draw_gate(400, 400, 2)
 
 gateselect = ttk.Combobox(toolbar)
-gateselect['values'] = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
+gateselect['values'] = GATE_NAMES
 gateselect.state(['readonly'])
 gateselect.set('NOT')
 gateselect.grid(column=4, row=1)
-
+gateselect.bind('<<ComboboxSelected>>', combobox_event)
 
 borders = []
 
