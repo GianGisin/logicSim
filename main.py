@@ -1,24 +1,24 @@
-# from enum import Enum
+from enum import Enum
 from tkinter import Tk, PhotoImage, Menu, Frame, Canvas
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
 GATE_NAMES = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
 
-# class GateType(Enum):
-#     NOT = 0
-#     AND = 1
-#     OR = 2
-#     XOR = 3
-#     NAND = 4
-#     NOR = 5
-#     XNOR = 6
+class GateType(Enum):
+    NOT = 0
+    AND = 1
+    OR = 2
+    XOR = 3
+    NAND = 4
+    NOR = 5
+    XNOR = 6
 
 
-def draw_gate(x, y, gate_type):
+def draw_gate(x: int, y: int, gate_type: GateType):
     radius = 5
     y_offset = 20
-    canvas.create_image(x, y, image=gate_images[gate_type])
+    canvas.create_image(x, y, image=gate_images[gate_type.value])
     canvas.create_oval(x+50-radius, y-radius, x+50+radius, y+radius, fill="red")
     canvas.create_oval(x-50-radius, y-radius+y_offset, x-50+radius, y+radius+y_offset, fill="red")
     canvas.create_oval(x-50-radius, y-radius-y_offset, x-50+radius, y+radius-y_offset, fill="red")
@@ -138,8 +138,8 @@ canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", leftclick_event)
 
-draw_gate(200, 200, 1)
-draw_gate(400, 400, 2)
+draw_gate(200, 200, GateType.AND)
+draw_gate(400, 400, GateType.OR)
 
 gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = GATE_NAMES
