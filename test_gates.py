@@ -139,6 +139,25 @@ class Gates_test(unittest.TestCase):
         g_xor.Q.connect(g_and2.A)
         g_and1.Q.connect(g_carry.B)
         g_and2.Q.connect(g_carry.A)
+
+        # truth table  A      B      Cin    Sum    Carry
+        truth_table =[[False, False, False, False, False],
+                      [False, False, True, True, False],
+                      [False, True, False, True, False],
+                      [False, True, True, False, True],
+                      [True, False, False, True, False],
+                      [True, False, True, False, True],
+                      [True, True, False, False, True],
+                      [True, True, True, True, True]]
         
+        for i, row in enumerate(truth_table):
+            A.send(row[0])
+            B.send(row[1])
+            C.send(row[2])
+
+            self.assertEqual(g_sum.Q.state, row[3])
+            self.assertEqual(g_carry.Q.state, row[4])
+
+
 if __name__ == '__main__':
     unittest.main()
