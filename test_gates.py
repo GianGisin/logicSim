@@ -140,5 +140,5 @@ class Gates_test(unittest.TestCase):
         g_and1.Q.connect(g_carry.B)
         g_and2.Q.connect(g_carry.A)
         
-
-unittest.main()
+if __name__ == '__main__':
+    unittest.main()
