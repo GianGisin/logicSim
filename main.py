@@ -69,7 +69,6 @@ def leftclick_event(event):
             # gate tool selected
             TODO("handle gate click")
             # check selected tool from gateselect
-            # ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
 
             current_selection = gateselect.get()
             print(current_selection + "\n")
@@ -92,13 +91,16 @@ def leftclick_event(event):
 def combobox_event(event):
     gateselect.selection_clear()
 
+# initialize main window
 root = Tk()
+
 cursor = PhotoImage(file="img/toolbar_icons/pointer.png")
 pen = PhotoImage(file="img/toolbar_icons/pen.png")
 gate_icon = PhotoImage(file="img/toolbar_icons/gate-icon.png")
 
 gate_images = []
 
+# load all gate images into list, after resizing them
 for gate in GATE_NAMES:
     path_string = "img/gate_img/GATE_" + gate + ".png"
     print(path_string)
@@ -131,9 +133,11 @@ mainframe.grid(column=0, row=0, sticky="nsew")
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(1, weight=1)
 
+# initialize toolbar
 toolbar = ttk.Frame(mainframe, relief="raised", borderwidth=2)
 toolbar.grid(column=0, row=0, sticky="new")
 
+# initialize canvas
 canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", leftclick_event)
@@ -150,6 +154,7 @@ gateselect.bind('<<ComboboxSelected>>', combobox_event)
 
 borders = []
 
+# create toolbar buttons and borders to show selected tool
 bborder = Frame(toolbar, background="blue", bd=2)
 bborder.grid(column=1, row=1)
 borders.append(bborder)
@@ -168,4 +173,5 @@ borders.append(dborder)
 d = ttk.Button(dborder, image=gate_icon, text="gate", command=lambda: toolbar_event(2))
 d.pack()
 
+# start event loop
 root.mainloop()
