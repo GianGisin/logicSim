@@ -150,7 +150,7 @@ class Gates_test(unittest.TestCase):
                       [True, True, False, False, True],
                       [True, True, True, True, True]]
         
-        for i, row in enumerate(truth_table):
+        for row in truth_table:
             A.send(row[0])
             B.send(row[1])
             C.send(row[2])
