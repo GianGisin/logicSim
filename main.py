@@ -72,11 +72,7 @@ def leftclick_event(event):
         case 2:
             # gate tool selected
             TODO("handle gate click")
-            # check selected tool from gateselect
-
-            current_selection = gateselect.get()
-            print(current_selection + "\n")
-            draw_gate(event.x, event.y, GateType[current_selection])
+            draw_gate(event.x, event.y, GateType[gateselect.get()])
         
 def combobox_event(event):
     gateselect.selection_clear()
