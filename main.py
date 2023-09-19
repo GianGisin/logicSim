@@ -6,6 +6,13 @@ from PIL import Image, ImageTk
 
 GATE_NAMES = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
 
+IMAGE_WIDTH = 200
+IMAGE_HEIGHT = 150
+IMAGE_RATIO = IMAGE_HEIGHT/IMAGE_WIDTH
+IMAGE_SCALE_FACTOR = 0.5
+IMAGE_SCALED_WIDTH = math.floor(IMAGE_WIDTH * IMAGE_SCALE_FACTOR)
+IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
+
 class GateType(Enum):
     NOT = 0
     AND = 1
@@ -91,7 +98,7 @@ for gate in GATE_NAMES:
     path_string = "img/gate_img/GATE_" + gate + ".png"
     print(path_string)
     img = Image.open(path_string)
-    img = img.resize((100,75))
+    img = img.resize((IMAGE_SCALED_WIDTH, IMAGE_SCALED_HEIGHT))
     gate_images.append(ImageTk.PhotoImage(img)) 
 
 # initialize main window
