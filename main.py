@@ -1,6 +1,7 @@
 from enum import Enum
+import math
 from tkinter import Tk, PhotoImage, Menu, Frame, Canvas
-from tkinter import ttk, messagebox
+from tkinter import ttk
 from PIL import Image, ImageTk
 
 GATE_NAMES = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
@@ -62,7 +63,10 @@ def leftclick_event(event):
                 l.x = event.x
                 l.y = event.y
             else:
-                canvas.create_line(l.x, l.y, event.x, event.y, width=3)
+                dx = event.x - l.x
+                canvas.create_line(l.x, l.y, l.x + math.floor(dx/2), l.y, width=3)
+                canvas.create_line(l.x + math.floor(dx/2), l.y, l.x + math.floor(dx/2), event.y, width=3)
+                canvas.create_line(l.x + math.floor(dx/2), event.y, event.x, event.y, width=3)
                 l.reset()
             
         case 2:
@@ -72,21 +76,7 @@ def leftclick_event(event):
 
             current_selection = gateselect.get()
             print(current_selection + "\n")
-            match current_selection:
-                case 'NOT':
-                    pass
-                case 'AND': 
-                    pass
-                case 'OR': 
-                    pass
-                case 'XOR': 
-                    pass
-                case 'NAND': 
-                    pass
-                case 'NOR': 
-                    pass
-                case 'XNOR': 
-                    pass
+            draw_gate(event.x, event.y, GateType[current_selection])
         
 def combobox_event(event):
     gateselect.selection_clear()
@@ -141,9 +131,6 @@ toolbar.grid(column=0, row=0, sticky="new")
 canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", leftclick_event)
-
-draw_gate(200, 200, GateType.AND)
-draw_gate(400, 400, GateType.OR)
 
 gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = GATE_NAMES
