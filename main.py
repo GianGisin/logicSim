@@ -22,15 +22,22 @@ class GateType(Enum):
     NOR = 5
     XNOR = 6
 
+def draw_circle(x, y, r, fill="red", outline="red"):
+    canvas.create_oval(x-r, y-r, x+r, y+r, fill=fill, outline=outline)
 
 def draw_gate(x: int, y: int, gate_type: GateType):
     radius = 5
     y_offset = 20
     x_offset = math.floor(IMAGE_SCALED_WIDTH/2)
+
+    q_pos = (x+x_offset, y)
+    a_pos = (x-x_offset, y+y_offset)
+    b_pos = (x-x_offset, y-y_offset)
+
     canvas.create_image(x, y, image=gate_images[gate_type.value])
-    canvas.create_oval(x+x_offset-radius, y-radius, x+x_offset+radius, y+radius, fill="red")
-    canvas.create_oval(x-x_offset-radius, y-radius+y_offset, x-x_offset+radius, y+radius+y_offset, fill="red")
-    canvas.create_oval(x-x_offset-radius, y-radius-y_offset, x-x_offset+radius, y+radius-y_offset, fill="red")
+    draw_circle(q_pos[0], q_pos[1], radius)
+    draw_circle(a_pos[0], a_pos[1], radius)
+    draw_circle(b_pos[0], b_pos[1], radius)
 
 current_tool = 0
 
