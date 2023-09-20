@@ -70,7 +70,6 @@ def toolbar_event(*args):
         borders[args[0]].configure(background="blue")
         print(f"toolbar event, tool {current_tool} selected.")
 
-
 l = []
 
 def leftclick_on_circ(id):
@@ -112,6 +111,7 @@ def combobox_event(event):
 # initialize main window
 root = Tk()
 
+# load toolbar images 
 cursor = PhotoImage(file="img/toolbar_icons/pointer.png")
 pen = PhotoImage(file="img/toolbar_icons/pen.png")
 gate_icon = PhotoImage(file="img/toolbar_icons/gate-icon.png")
@@ -161,6 +161,7 @@ canvas = Canvas(mainframe, background="grey75")
 canvas.grid(column=0, row=1, sticky="nesw")
 canvas.bind("<Button-1>", leftclick_event)
 
+# initialize gate selection box
 gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = GATE_NAMES
 gateselect.state(['readonly'])
