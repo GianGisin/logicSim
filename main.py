@@ -79,9 +79,7 @@ def leftclick_event(event):
                 l.y = event.y
             else:
                 dx = event.x - l.x
-                canvas.create_line(l.x, l.y, l.x + math.floor(dx/2), l.y, width=3)
-                canvas.create_line(l.x + math.floor(dx/2), l.y, l.x + math.floor(dx/2), event.y, width=3)
-                canvas.create_line(l.x + math.floor(dx/2), event.y, event.x, event.y, width=3)
+                canvas.create_line([l.x, l.y, l.x + math.floor(dx/2), l.y, l.x + math.floor(dx/2), l.y, l.x + math.floor(dx/2), event.y, l.x + math.floor(dx/2), event.y, event.x, event.y], width=3)
                 l.reset()
             
         case 2:
