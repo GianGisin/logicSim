@@ -6,6 +6,8 @@ from PIL import Image, ImageTk
 
 GATE_NAMES = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
 
+CIRCLE_RADIUS = 5
+
 IMAGE_WIDTH = 200
 IMAGE_HEIGHT = 150
 IMAGE_RATIO = IMAGE_HEIGHT/IMAGE_WIDTH
@@ -22,11 +24,15 @@ class GateType(Enum):
     NOR = 5
     XNOR = 6
 
-def draw_circle(x, y, r, fill="red", outline="red"):
-    canvas.create_oval(x-r, y-r, x+r, y+r, fill=fill, outline=outline)
+class Tool(Enum):
+    POINTER = 0
+    PEN = 1
+    GATE = 2
+
+def draw_circle(x, y, r, fill="red", outline="red", tags=[]):
+    return canvas.create_oval(x-r, y-r, x+r, y+r, fill=fill, outline=outline, tags=tags)
 
 def draw_gate(x: int, y: int, gate_type: GateType):
-    radius = 5
     y_offset = 20
     x_offset = math.floor(IMAGE_SCALED_WIDTH/2)
 
@@ -34,10 +40,17 @@ def draw_gate(x: int, y: int, gate_type: GateType):
     a_pos = (x-x_offset, y+y_offset)
     b_pos = (x-x_offset, y-y_offset)
 
-    canvas.create_image(x, y, image=gate_images[gate_type.value])
-    draw_circle(q_pos[0], q_pos[1], radius)
-    draw_circle(a_pos[0], a_pos[1], radius)
-    draw_circle(b_pos[0], b_pos[1], radius)
+
+    gate_id = canvas.create_image(x, y, image=gate_images[gate_type.value])
+    canvas.addtag_withtag(f"gate{gate_id}", gate_id)
+    q_circ = draw_circle(q_pos[0], q_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "Q"))
+    a_circ = draw_circle(a_pos[0], a_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "A"))
+    b_circ = draw_circle(b_pos[0], b_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "B"))
+
+    canvas.tag_bind(gate_id, "<Button-1>", lambda e: leftclick_on_gate(gate_id))
+    canvas.tag_bind(q_circ, "<Button-1>", lambda e: leftclick_on_circ(q_circ))
+    canvas.tag_bind(a_circ, "<Button-1>", lambda e: leftclick_on_circ(a_circ))
+    canvas.tag_bind(b_circ, "<Button-1>", lambda e: leftclick_on_circ(b_circ))
 
 current_tool = 0
 
@@ -50,42 +63,39 @@ def toolbar_event(*args):
         for border in borders:
             border.configure(background="grey75")
         
-        current_tool = args[0]
+        current_tool = Tool(args[0])
         borders[args[0]].configure(background="blue")
         print(f"toolbar event, tool {current_tool} selected.")
 
 
-class Line:
-    x = -1
-    y = -1
-    
-    def reset(self):
-        self.x = -1
-        self.y = -1
+l = []
 
-l = Line()
+def leftclick_on_circ(id):
+    global l
+    current_coords = canvas.coords(id)
+    print(f"Click on circle with id {id} and coords {current_coords} and tags {canvas.gettags(id)}")
+    if current_tool == Tool.PEN:
+        # TODO more checks needed so no loops can be drawn
+        l.extend([current_coords[0] + CIRCLE_RADIUS, current_coords[1] + CIRCLE_RADIUS])
+        if len(l) >= 4:
+            # draw the connection
+            dx = l[2] - l[0]
+            print("drawing line")
+            canvas.create_line([l[0], l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[3], l[0] + math.floor(dx/2), l[3], l[2], l[3]], width=3)
+            l.clear()
+
+
+def leftclick_on_gate(id):
+    print(f"Click on gate with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}")
+    if current_tool == Tool.POINTER:
+        # possibly drag to move
+        pass
 
 def leftclick_event(event):
-    print(f"leftclick with tool {current_tool}\n")
-    match current_tool:
-        case 0:
-            # pointer tool selected
-            TODO("handle pointer click")
-        case 1:
-            # draw tool selected
-            print(f"x: {event.x}\ny: {event.y}")
-            if l.x == -1:
-                l.x = event.x
-                l.y = event.y
-            else:
-                dx = event.x - l.x
-                canvas.create_line([l.x, l.y, l.x + math.floor(dx/2), l.y, l.x + math.floor(dx/2), l.y, l.x + math.floor(dx/2), event.y, l.x + math.floor(dx/2), event.y, event.x, event.y], width=3)
-                l.reset()
-            
-        case 2:
-            # gate tool selected
-            TODO("handle gate click")
-            draw_gate(event.x, event.y, GateType[gateselect.get()])
+    if current_tool == Tool.GATE:
+        # gate tool selected
+        TODO("handle gate click")
+        draw_gate(event.x, event.y, GateType[gateselect.get()])
         
 def combobox_event(event):
     gateselect.selection_clear()
