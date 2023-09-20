@@ -85,12 +85,18 @@ def leftclick_on_circ(id):
             canvas.create_line([l[0], l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[3], l[0] + math.floor(dx/2), l[3], l[2], l[3]], width=3)
             l.clear()
 
-
 def leftclick_on_gate(id):
     print(f"Click on gate with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}")
-    if current_tool == Tool.POINTER:
-        # possibly drag to move
-        pass
+    match current_tool:
+        case Tool.POINTER:
+            # possibly drag to move
+            pass
+        case Tool.BIN:
+            # delete gate
+            # get gate tags
+            print("at delete")
+            tags = canvas.gettags(id)
+            canvas.delete(tags[0])
 
 def leftclick_event(event):
     if current_tool == Tool.GATE:
