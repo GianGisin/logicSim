@@ -26,10 +26,11 @@ class GateType(Enum):
 def draw_gate(x: int, y: int, gate_type: GateType):
     radius = 5
     y_offset = 20
+    x_offset = math.floor(IMAGE_SCALED_WIDTH/2)
     canvas.create_image(x, y, image=gate_images[gate_type.value])
-    canvas.create_oval(x+50-radius, y-radius, x+50+radius, y+radius, fill="red")
-    canvas.create_oval(x-50-radius, y-radius+y_offset, x-50+radius, y+radius+y_offset, fill="red")
-    canvas.create_oval(x-50-radius, y-radius-y_offset, x-50+radius, y+radius-y_offset, fill="red")
+    canvas.create_oval(x+x_offset-radius, y-radius, x+x_offset+radius, y+radius, fill="red")
+    canvas.create_oval(x-x_offset-radius, y-radius+y_offset, x-x_offset+radius, y+radius+y_offset, fill="red")
+    canvas.create_oval(x-x_offset-radius, y-radius-y_offset, x-x_offset+radius, y+radius-y_offset, fill="red")
 
 current_tool = 0
 
