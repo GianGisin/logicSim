@@ -41,17 +41,19 @@ def draw_gate(x: int, y: int, gate_type: GateType):
     a_pos = (x-x_offset, y+y_offset)
     b_pos = (x-x_offset, y-y_offset)
 
-
     gate_id = canvas.create_image(x, y, image=gate_images[gate_type.value])
     canvas.addtag_withtag(f"gate{gate_id}", gate_id)
+
     q_circ = draw_circle(q_pos[0], q_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "Q"))
     a_circ = draw_circle(a_pos[0], a_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "A"))
-    b_circ = draw_circle(b_pos[0], b_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "B"))
 
     canvas.tag_bind(gate_id, "<Button-1>", lambda e: leftclick_on_gate(gate_id))
     canvas.tag_bind(q_circ, "<Button-1>", lambda e: leftclick_on_circ(q_circ))
     canvas.tag_bind(a_circ, "<Button-1>", lambda e: leftclick_on_circ(a_circ))
-    canvas.tag_bind(b_circ, "<Button-1>", lambda e: leftclick_on_circ(b_circ))
+
+    if gate_type != GateType.NOT:
+        b_circ = draw_circle(b_pos[0], b_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "B"))
+        canvas.tag_bind(b_circ, "<Button-1>", lambda e: leftclick_on_circ(b_circ))
 
 current_tool = 0
 
