@@ -28,6 +28,7 @@ class Tool(Enum):
     POINTER = 0
     PEN = 1
     GATE = 2
+    BIN = 3
 
 def draw_circle(x, y, r, fill="red", outline="red", tags=[]):
     return canvas.create_oval(x-r, y-r, x+r, y+r, fill=fill, outline=outline, tags=tags)
@@ -106,6 +107,7 @@ root = Tk()
 cursor = PhotoImage(file="img/toolbar_icons/pointer.png")
 pen = PhotoImage(file="img/toolbar_icons/pen.png")
 gate_icon = PhotoImage(file="img/toolbar_icons/gate-icon.png")
+waste_bin = PhotoImage(file="img/toolbar_icons/bin.png")
 
 gate_images = []
 
@@ -155,7 +157,7 @@ gateselect = ttk.Combobox(toolbar)
 gateselect['values'] = GATE_NAMES
 gateselect.state(['readonly'])
 gateselect.set('NOT')
-gateselect.grid(column=4, row=1)
+gateselect.grid(column=5, row=1)
 gateselect.bind('<<ComboboxSelected>>', combobox_event)
 
 borders = []
@@ -177,6 +179,12 @@ dborder = Frame(toolbar, background="grey75", bd=2)
 dborder.grid(column=3, row=1)
 borders.append(dborder)
 d = ttk.Button(dborder, image=gate_icon, text="gate", command=lambda: toolbar_event(2))
+d.pack()
+
+eborder = Frame(toolbar, background="grey75", bd=2)
+eborder.grid(column=4, row=1)
+borders.append(eborder)
+d = ttk.Button(eborder, image=waste_bin, text="bin", command=lambda: toolbar_event(3))
 d.pack()
 
 # start event loop
