@@ -71,20 +71,33 @@ def toolbar_event(*args):
         print(f"toolbar event, tool {current_tool} selected.")
 
 l = []
+gate_tags = []
 
 def leftclick_on_circ(id):
-    global l
     current_coords = canvas.coords(id)
     print(f"Click on circle with id {id} and coords {current_coords} and tags {canvas.gettags(id)}")
     if current_tool == Tool.PEN:
         # TODO more checks needed so no loops can be drawn
         l.extend([current_coords[0] + CIRCLE_RADIUS, current_coords[1] + CIRCLE_RADIUS])
+        gate_tags.append(canvas.gettags(id)[0])
         if len(l) >= 4:
             # draw the connection
             dx = l[2] - l[0]
             print("drawing line")
-            canvas.create_line([l[0], l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[3], l[0] + math.floor(dx/2), l[3], l[2], l[3]], width=3)
+            line_id = canvas.create_line([l[0], l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[3], l[0] + math.floor(dx/2), l[3], l[2], l[3]], width=3)
+            canvas.tag_bind(line_id, "<Button-1>", lambda e: leftclick_on_line(line_id))
+            canvas.addtag_withtag(gate_tags[0], line_id)
+            canvas.addtag_withtag(gate_tags[1], line_id)
             l.clear()
+            gate_tags.clear()
+            print(f"line now has tags: {canvas.gettags(id)}")
+
+def leftclick_on_line(id):
+    print(f"Click on line with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}")
+    match current_tool:
+        case Tool.BIN:
+            canvas.delete(id)
+            # TODO: delete connection from simulation
 
 def leftclick_on_gate(id):
     print(f"Click on gate with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}")
@@ -97,12 +110,18 @@ def leftclick_on_gate(id):
             # get gate tags
             print("at delete")
             tags = canvas.gettags(id)
+            print(f"deleting objects with tag {tags[0]}")
+            print(f"all objects with tag {tags[0]}: {canvas.find_withtag(tags[0])}")
             canvas.delete(tags[0])
+            canvas.delete(tags[0])
+
+            # TODO: 
+            # - delete gate from simulation
+            # - delete connected lines
 
 def leftclick_event(event):
     if current_tool == Tool.GATE:
         # gate tool selected
-        TODO("handle gate click")
         draw_gate(event.x, event.y, GateType[gateselect.get()])
         
 def combobox_event(event):
