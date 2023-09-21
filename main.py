@@ -4,16 +4,17 @@ from tkinter import Tk, PhotoImage, Menu, Frame, Canvas
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-GATE_NAMES = ('NOT', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'XNOR')
+GATE_NAMES = ("NOT", "AND", "OR", "XOR", "NAND", "NOR", "XNOR")
 
 CIRCLE_RADIUS = 5
 
 IMAGE_WIDTH = 200
 IMAGE_HEIGHT = 150
-IMAGE_RATIO = IMAGE_HEIGHT/IMAGE_WIDTH
+IMAGE_RATIO = IMAGE_HEIGHT / IMAGE_WIDTH
 IMAGE_SCALE_FACTOR = 0.5
 IMAGE_SCALED_WIDTH = math.floor(IMAGE_WIDTH * IMAGE_SCALE_FACTOR)
 IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
+
 
 class GateType(Enum):
     NOT = 0
@@ -24,58 +25,76 @@ class GateType(Enum):
     NOR = 5
     XNOR = 6
 
+
 class Tool(Enum):
     POINTER = 0
     PEN = 1
     GATE = 2
     BIN = 3
 
+
 def draw_circle(x, y, r, fill="red", outline="red", tags=[]):
-    return canvas.create_oval(x-r, y-r, x+r, y+r, fill=fill, outline=outline, tags=tags)
+    return canvas.create_oval(
+        x - r, y - r, x + r, y + r, fill=fill, outline=outline, tags=tags
+    )
+
 
 def draw_gate(x: int, y: int, gate_type: GateType):
     y_offset = 20
-    x_offset = math.floor(IMAGE_SCALED_WIDTH/2)
+    x_offset = math.floor(IMAGE_SCALED_WIDTH / 2)
 
-    q_pos = (x+x_offset, y)
-    a_pos = (x-x_offset, y+y_offset)
-    b_pos = (x-x_offset, y-y_offset)
+    q_pos = (x + x_offset, y)
+    a_pos = (x - x_offset, y + y_offset)
+    b_pos = (x - x_offset, y - y_offset)
 
     gate_id = canvas.create_image(x, y, image=gate_images[gate_type.value])
     canvas.addtag_withtag(f"gate{gate_id}", gate_id)
 
-    q_circ = draw_circle(q_pos[0], q_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "Q"))
-    a_circ = draw_circle(a_pos[0], a_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "A"))
+    q_circ = draw_circle(
+        q_pos[0], q_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "Q")
+    )
+    a_circ = draw_circle(
+        a_pos[0], a_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "A")
+    )
 
     canvas.tag_bind(gate_id, "<Button-1>", lambda e: leftclick_on_gate(gate_id))
     canvas.tag_bind(q_circ, "<Button-1>", lambda e: leftclick_on_circ(q_circ))
     canvas.tag_bind(a_circ, "<Button-1>", lambda e: leftclick_on_circ(a_circ))
 
     if gate_type != GateType.NOT:
-        b_circ = draw_circle(b_pos[0], b_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "B"))
+        b_circ = draw_circle(
+            b_pos[0], b_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "B")
+        )
         canvas.tag_bind(b_circ, "<Button-1>", lambda e: leftclick_on_circ(b_circ))
+
 
 current_tool = 0
 
+
 def TODO(st):
     print(f"TODO {st}")
+
 
 def toolbar_event(*args):
     global current_tool
     if len(args) != 0:
         for border in borders:
             border.configure(background="grey75")
-        
+
         current_tool = Tool(args[0])
         borders[args[0]].configure(background="blue")
         print(f"toolbar event, tool {current_tool} selected.")
 
+
 l = []
 gate_tags = []
 
+
 def leftclick_on_circ(id):
     current_coords = canvas.coords(id)
-    print(f"Click on circle with id {id} and coords {current_coords} and tags {canvas.gettags(id)}")
+    print(
+        f"Click on circle with id {id} and coords {current_coords} and tags {canvas.gettags(id)}"
+    )
     if current_tool == Tool.PEN:
         # TODO more checks needed so no loops can be drawn
         l.extend([current_coords[0] + CIRCLE_RADIUS, current_coords[1] + CIRCLE_RADIUS])
@@ -84,7 +103,23 @@ def leftclick_on_circ(id):
             # draw the connection
             dx = l[2] - l[0]
             print("drawing line")
-            line_id = canvas.create_line([l[0], l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[1], l[0] + math.floor(dx/2), l[3], l[0] + math.floor(dx/2), l[3], l[2], l[3]], width=3)
+            line_id = canvas.create_line(
+                [
+                    l[0],
+                    l[1],
+                    l[0] + math.floor(dx / 2),
+                    l[1],
+                    l[0] + math.floor(dx / 2),
+                    l[1],
+                    l[0] + math.floor(dx / 2),
+                    l[3],
+                    l[0] + math.floor(dx / 2),
+                    l[3],
+                    l[2],
+                    l[3],
+                ],
+                width=3,
+            )
             canvas.tag_bind(line_id, "<Button-1>", lambda e: leftclick_on_line(line_id))
             canvas.addtag_withtag(gate_tags[0], line_id)
             canvas.addtag_withtag(gate_tags[1], line_id)
@@ -92,15 +127,21 @@ def leftclick_on_circ(id):
             gate_tags.clear()
             print(f"line now has tags: {canvas.gettags(id)}")
 
+
 def leftclick_on_line(id):
-    print(f"Click on line with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}")
+    print(
+        f"Click on line with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
+    )
     match current_tool:
         case Tool.BIN:
             canvas.delete(id)
             # TODO: delete connection from simulation
 
+
 def leftclick_on_gate(id):
-    print(f"Click on gate with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}")
+    print(
+        f"Click on gate with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
+    )
     match current_tool:
         case Tool.POINTER:
             # possibly drag to move
@@ -115,22 +156,25 @@ def leftclick_on_gate(id):
             canvas.delete(tags[0])
             canvas.delete(tags[0])
 
-            # TODO: 
+            # TODO:
             # - delete gate from simulation
             # - delete connected lines
+
 
 def leftclick_event(event):
     if current_tool == Tool.GATE:
         # gate tool selected
         draw_gate(event.x, event.y, GateType[gateselect.get()])
-        
+
+
 def combobox_event(event):
     gateselect.selection_clear()
+
 
 # initialize main window
 root = Tk()
 
-# load toolbar images 
+# load toolbar images
 cursor = PhotoImage(file="img/toolbar_icons/pointer.png")
 pen = PhotoImage(file="img/toolbar_icons/pen.png")
 gate_icon = PhotoImage(file="img/toolbar_icons/gate-icon.png")
@@ -144,13 +188,13 @@ for gate in GATE_NAMES:
     print(path_string)
     img = Image.open(path_string)
     img = img.resize((IMAGE_SCALED_WIDTH, IMAGE_SCALED_HEIGHT))
-    gate_images.append(ImageTk.PhotoImage(img)) 
+    gate_images.append(ImageTk.PhotoImage(img))
 
 # initialize main window
 root.iconphoto(False, cursor)
 root.title("logicSim")
 root.geometry("500x500")
-root.option_add('*tearOff', False)
+root.option_add("*tearOff", False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
@@ -164,7 +208,7 @@ m_edit.add_command(label="Paste")
 m_edit.add_command(label="Find...")
 m_save.add_command(label="Paste")
 m_save.add_command(label="Find...")
-root['menu'] = m
+root["menu"] = m
 
 mainframe = ttk.Frame(root)
 mainframe.grid(column=0, row=0, sticky="nsew")
@@ -182,11 +226,11 @@ canvas.bind("<Button-1>", leftclick_event)
 
 # initialize gate selection box
 gateselect = ttk.Combobox(toolbar)
-gateselect['values'] = GATE_NAMES
-gateselect.state(['readonly'])
-gateselect.set('NOT')
+gateselect["values"] = GATE_NAMES
+gateselect.state(["readonly"])
+gateselect.set("NOT")
 gateselect.grid(column=5, row=1)
-gateselect.bind('<<ComboboxSelected>>', combobox_event)
+gateselect.bind("<<ComboboxSelected>>", combobox_event)
 
 borders = []
 
