@@ -83,7 +83,7 @@ def toolbar_event(*args):
 
         current_tool = Tool(args[0])
         borders[args[0]].configure(background="blue")
-        print(f"toolbar event, tool {current_tool} selected.")
+        print(f"Toolbar event, tool {current_tool} selected.")
 
 
 l = []
