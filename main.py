@@ -18,12 +18,6 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 LAMP_IMAGE_SIDE = 50
 
 
-class IO:
-    def __init__(self, id, powered=False) -> None:
-        self.id = id
-        self.powered = powered
-
-
 class GateType(Enum):
     NOT = 0
     AND = 1
@@ -174,44 +168,49 @@ def leftclick_on_gate(id):
             print(f"deleting objects with tag {tags[0]}")
             print(f"all objects with tag {tags[0]}: {canvas.find_withtag(tags[0])}")
             canvas.delete(tags[0])
-            canvas.delete(tags[0])
 
             # TODO:
             # - delete gate from simulation
-            # - delete connected lines
 
 
 def leftclick_on_lamp(id):
     print(
         f"Click on lamp with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
     )
-    if current_tool == Tool.BIN:
-        canvas.delete(id)
-        # TODO: delete all attached lines
+    match current_tool:
+        case Tool.PEN:
+            leftclick_on_circ(id)
+        case Tool.BIN:
+            tags = canvas.gettags(id)
+            canvas.delete(tags[0])
 
 
 def leftclick_on_switch(id):
     print(
         f"Click on switch with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
     )
-    if current_tool == Tool.POINTER:
-        # toggle switch state
-        if "switch_on" in canvas.gettags(id):
-            # change the image to off
-            canvas.itemconfigure(id, image=switch_off)
-            # change the tag from "switch_on" to "switch_off"
-            canvas.dtag(id, "switch_on")
-            canvas.addtag_withtag("switch_off", id)
-        else:
-            # change the image to on
-            canvas.itemconfigure(id, image=switch_on)
-            # change the tag from "switch_off" to "switch_on"
-            canvas.dtag(id, "switch_off")
-            canvas.addtag_withtag("switch_on", id)
+    match current_tool:
+        case Tool.PEN:
+            leftclick_on_circ(id)
 
-    if current_tool == Tool.BIN:
-        canvas.delete(id)
-        # TODO: delete all attached lines
+        case Tool.POINTER:
+            # toggle switch state
+            if "switch_on" in canvas.gettags(id):
+                # change the image to off
+                canvas.itemconfigure(id, image=switch_off)
+                # change the tag from "switch_on" to "switch_off"
+                canvas.dtag(id, "switch_on")
+                canvas.addtag_withtag("switch_off", id)
+            else:
+                # change the image to on
+                canvas.itemconfigure(id, image=switch_on)
+                # change the tag from "switch_off" to "switch_on"
+                canvas.dtag(id, "switch_off")
+                canvas.addtag_withtag("switch_on", id)
+
+        case Tool.BIN:
+            tags = canvas.gettags(id)
+            canvas.delete(tags[0])
 
 
 def leftclick_event(event):
