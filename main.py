@@ -15,6 +15,8 @@ IMAGE_SCALE_FACTOR = 0.5
 IMAGE_SCALED_WIDTH = math.floor(IMAGE_WIDTH * IMAGE_SCALE_FACTOR)
 IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 
+LAMP_IMAGE_SIDE = 50
+
 
 class GateType(Enum):
     NOT = 0
@@ -69,11 +71,13 @@ def draw_gate(x: int, y: int, gate_type: GateType):
         )
         canvas.tag_bind(b_circ, "<Button-1>", lambda e: leftclick_on_circ(b_circ))
 
+
 def draw_lamp(x: int, y: int):
-    pass
+    canvas.create_image(x, y, image=lamp_off)
+
 
 def draw_switch(x: int, y: int):
-    pass
+    canvas.create_image(x, y, image=switch_off)
 
 
 current_tool = 0
@@ -170,9 +174,9 @@ def leftclick_event(event):
         # gate tool selected
         draw_gate(event.x, event.y, GateType[gateselect.get()])
     if current_tool == Tool.LAMP:
-        pass
+        draw_lamp(event.x, event.y)
     if current_tool == Tool.SWITCH:
-        pass
+        draw_switch(event.x, event.y)
 
 
 def combobox_event(event):
@@ -199,6 +203,19 @@ for gate in GATE_NAMES:
     img = Image.open(path_string)
     img = img.resize((IMAGE_SCALED_WIDTH, IMAGE_SCALED_HEIGHT))
     gate_images.append(ImageTk.PhotoImage(img))
+
+# load lamp state images, use nearest neighbour interpolation for resizing
+lamp_on = Image.open("img/gate_img/LAMP_ON.png").resize((LAMP_IMAGE_SIDE, LAMP_IMAGE_SIDE), Image.NEAREST)
+lamp_on = ImageTk.PhotoImage(lamp_on)
+
+lamp_off = Image.open("img/gate_img/LAMP_OFF.png").resize((LAMP_IMAGE_SIDE, LAMP_IMAGE_SIDE), Image.NEAREST)
+lamp_off = ImageTk.PhotoImage(lamp_off)
+
+# load switch images, use nearest neighbour interpolation for resizing
+switch_on = Image.open("img/gate_img/SWITCH_ON.png").resize((72, 48), Image.NEAREST)
+switch_off = switch_on.rotate(180, Image.NEAREST)
+switch_off = ImageTk.PhotoImage(switch_off)
+switch_on = ImageTk.PhotoImage(switch_on)
 
 # initialize main window
 root.iconphoto(False, cursor)
