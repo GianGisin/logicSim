@@ -18,6 +18,12 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 LAMP_IMAGE_SIDE = 50
 
 
+class IO:
+    def __init__(self, id, powered=False) -> None:
+        self.id = id
+        self.powered = powered
+
+
 class GateType(Enum):
     NOT = 0
     AND = 1
@@ -73,11 +79,15 @@ def draw_gate(x: int, y: int, gate_type: GateType):
 
 
 def draw_lamp(x: int, y: int):
-    canvas.create_image(x, y, image=lamp_off)
+    lamp_id = canvas.create_image(x, y, image=lamp_off)
+    canvas.addtag_withtag("lamp_off", lamp_id)
+    canvas.tag_bind(lamp_id, "<Button-1>", lambda e: leftclick_on_lamp(lamp_id))
 
 
 def draw_switch(x: int, y: int):
-    canvas.create_image(x, y, image=switch_off)
+    switch_id = canvas.create_image(x, y, image=switch_off)
+    canvas.addtag_withtag("switch_off", switch_id)
+    canvas.tag_bind(switch_id, "<Button-1>", lambda e: leftclick_on_switch(switch_id))
 
 
 current_tool = 0
@@ -169,6 +179,39 @@ def leftclick_on_gate(id):
             # - delete connected lines
 
 
+def leftclick_on_lamp(id):
+    print(
+        f"Click on lamp with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
+    )
+    if current_tool == Tool.BIN:
+        canvas.delete(id)
+        # TODO: delete all attached lines
+
+
+def leftclick_on_switch(id):
+    print(
+        f"Click on switch with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
+    )
+    if current_tool == Tool.POINTER:
+        # toggle switch state
+        if "switch_on" in canvas.gettags(id):
+            # change the image to on
+            canvas.itemconfigure(id, image=switch_off)
+            # change the tag from "switch_off" to "switch_on"
+            canvas.dtag(id, "switch_on")
+            canvas.addtag_withtag("switch_off", id)
+        else:
+            # change the image to on
+            canvas.itemconfigure(id, image=switch_on)
+            # change the tag from "switch_off" to "switch_on"
+            canvas.dtag(id, "switch_off")
+            canvas.addtag_withtag("switch_on", id)
+
+    if current_tool == Tool.BIN:
+        canvas.delete(id)
+        # TODO: delete all attached lines
+
+
 def leftclick_event(event):
     if current_tool == Tool.GATE:
         # gate tool selected
@@ -205,10 +248,14 @@ for gate in GATE_NAMES:
     gate_images.append(ImageTk.PhotoImage(img))
 
 # load lamp state images, use nearest neighbour interpolation for resizing
-lamp_on = Image.open("img/gate_img/LAMP_ON.png").resize((LAMP_IMAGE_SIDE, LAMP_IMAGE_SIDE), Image.NEAREST)
+lamp_on = Image.open("img/gate_img/LAMP_ON.png").resize(
+    (LAMP_IMAGE_SIDE, LAMP_IMAGE_SIDE), Image.NEAREST
+)
 lamp_on = ImageTk.PhotoImage(lamp_on)
 
-lamp_off = Image.open("img/gate_img/LAMP_OFF.png").resize((LAMP_IMAGE_SIDE, LAMP_IMAGE_SIDE), Image.NEAREST)
+lamp_off = Image.open("img/gate_img/LAMP_OFF.png").resize(
+    (LAMP_IMAGE_SIDE, LAMP_IMAGE_SIDE), Image.NEAREST
+)
 lamp_off = ImageTk.PhotoImage(lamp_off)
 
 # load switch images, use nearest neighbour interpolation for resizing
