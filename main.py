@@ -195,9 +195,9 @@ def leftclick_on_switch(id):
     if current_tool == Tool.POINTER:
         # toggle switch state
         if "switch_on" in canvas.gettags(id):
-            # change the image to on
+            # change the image to off
             canvas.itemconfigure(id, image=switch_off)
-            # change the tag from "switch_off" to "switch_on"
+            # change the tag from "switch_on" to "switch_off"
             canvas.dtag(id, "switch_on")
             canvas.addtag_withtag("switch_off", id)
         else:
