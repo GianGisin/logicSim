@@ -266,7 +266,7 @@ switch_off = ImageTk.PhotoImage(switch_off)
 switch_on = ImageTk.PhotoImage(switch_on)
 
 # initialize main window
-root.iconphoto(False, cursor)
+root.iconphoto(True, gate_icon)
 root.title("logicSim")
 root.geometry("1000x700+0+0")
 root.option_add("*tearOff", False)
