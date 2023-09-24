@@ -89,15 +89,14 @@ def draw_switch(x: int, y: int):
 current_tool = 0
 
 
-def toolbar_event(*args):
+def toolbar_event(tool_num):
     global current_tool
-    if len(args) != 0:
-        for border in borders:
-            border.configure(background="grey75")
+    for border in borders:
+        border.configure(background="grey75")
 
-        current_tool = Tool(args[0])
-        borders[args[0]].configure(background="blue")
-        print(f"Toolbar event, tool {current_tool} selected.")
+    current_tool = Tool(tool_num)
+    borders[tool_num].configure(background="blue")
+    print(f"Toolbar event, tool {current_tool} selected. input: {tool_num}")
 
 
 l = []
@@ -309,79 +308,21 @@ gateselect.bind("<<ComboboxSelected>>", combobox_event)
 
 borders = []
 button_style = "top"
-
-# create toolbar buttons and borders to show selected tool
-bborder = Frame(toolbar, background="blue", bd=2)
-bborder.grid(column=1, row=1)
-borders.append(bborder)
-b = ttk.Button(
-    bborder,
-    image=cursor,
-    text="cursor",
-    compound=button_style,
-    command=lambda: toolbar_event(0),
-)
-b.pack()
-
-cborder = Frame(toolbar, background="grey75", bd=2)
-cborder.grid(column=2, row=1)
-borders.append(cborder)
-c = ttk.Button(
-    cborder,
-    image=pen,
-    text="pen",
-    compound=button_style,
-    command=lambda: toolbar_event(1),
-)
-c.pack()
-
-dborder = Frame(toolbar, background="grey75", bd=2)
-dborder.grid(column=3, row=1)
-borders.append(dborder)
-d = ttk.Button(
-    dborder,
-    image=gate_icon,
-    text="gate",
-    compound=button_style,
-    command=lambda: toolbar_event(2),
-)
-d.pack()
-
-eborder = Frame(toolbar, background="grey75", bd=2)
-eborder.grid(column=4, row=1)
-borders.append(eborder)
-e = ttk.Button(
-    eborder,
-    image=waste_bin,
-    text="delete",
-    compound=button_style,
-    command=lambda: toolbar_event(3),
-)
-e.pack()
-
-fborder = Frame(toolbar, background="grey75", bd=2)
-fborder.grid(column=5, row=1)
-borders.append(fborder)
-f = ttk.Button(
-    fborder,
-    image=lamp,
-    text="lamp",
-    compound=button_style,
-    command=lambda: toolbar_event(4),
-)
-f.pack()
-
-gborder = Frame(toolbar, background="grey75", bd=2)
-gborder.grid(column=6, row=1)
-borders.append(gborder)
-g = ttk.Button(
-    gborder,
-    image=switch,
-    text="switch",
-    compound=button_style,
-    command=lambda: toolbar_event(5),
-)
-g.pack()
+button_text = ["cursor", "pen", "gate", "delete", "lamp", "switch"]
+button_images = [cursor, pen, gate_icon, waste_bin, lamp, switch]
+for i in range(len(button_text)):
+    border = Frame(toolbar, background="grey75", bd=2)
+    border.grid(column=i + 1, row=1)
+    borders.append(border)
+    button = ttk.Button(
+        border,
+        image=button_images[i],
+        text=button_text[i],
+        compound=button_style,
+        command=lambda i=i: toolbar_event(i),
+    )
+    print(f"init button with i = {i}")
+    button.pack()
 
 # start event loop
 root.mainloop()
