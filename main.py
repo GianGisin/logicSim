@@ -310,6 +310,8 @@ borders = []
 button_style = "top"
 button_text = ["cursor", "pen", "gate", "delete", "lamp", "switch"]
 button_images = [cursor, pen, gate_icon, waste_bin, lamp, switch]
+
+# initialize toolbar buttons
 for i in range(len(button_text)):
     border = Frame(toolbar, background="grey75", bd=2)
     border.grid(column=i + 1, row=1)
