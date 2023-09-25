@@ -120,7 +120,6 @@ def leftclick_on_circ(id):
                 if gate_tags[0][0] != gate_tags[1][0]:
                     # draw the connection
                     dx = l[2] - l[0]
-                    print("drawing line")
                     line_id = canvas.create_line(
                         [
                             l[0],
@@ -145,9 +144,6 @@ def leftclick_on_circ(id):
                     # get id out of gate tag
                     id1 = int(gate_tags[0][0].replace("gate", ""))
                     id2 = int(gate_tags[1][0].replace("gate", ""))
-                    print(
-                        f"making connection between\n    |id1 = {id1}\n    |id2 = {id2}"
-                    )
                     if gate_tags[0][1] == "Q":
                         # connection id1 -> id2
                         canvas.addtag_withtag(gate_tags[0][0], line_id)
@@ -168,9 +164,8 @@ def leftclick_on_circ(id):
                         elif gate_tags[0][1] == "B":
                             # connection id2(Q) -> id1("B")
                             gate_sim[id2].Q.connect(gate_sim[id1].B)
-
                     print(
-                        f"created line with tags: {canvas.gettags(line_id)}\n from {gate_tags[0][1]} to {gate_tags[1][1]}"
+                        f"making connection between\n    |gate{id1} ({gate_tags[0][1]})\n    |gate{id2} ({gate_tags[1][1]})\n    |tags {canvas.gettags(line_id)}"
                     )
 
                 else:
@@ -187,12 +182,18 @@ def leftclick_on_circ(id):
 
 def leftclick_on_line(id):
     print(
-        f"Click on line with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
+        f" leftclick_on_line: Click on line with id {id} and coords {canvas.coords(id)} and tags {canvas.gettags(id)}"
     )
     match current_tool:
         case Tool.BIN:
-            canvas.delete(id)
             # delete connection from simulation
+            # get ID of output gate
+            # as the order of the tags is established in leftclick_on_circ, we can assume
+            # that the first tag is the id of the output gate
+            QID = int(canvas.gettags(id)[0].replace("gate", ""))
+            print(f"Deleting connection at gateid {QID}")
+            # delete line from canvas
+            canvas.delete(id)
 
 
 def leftclick_on_gate(id):
