@@ -53,6 +53,9 @@ class Gate:
     def evaluate(self) -> None:
         return
 
+    def __repr__(self) -> str:
+        return f"Gate connected to {self.Q.targets}"
+
 
 class NotGate:
     def __init__(self) -> None:
@@ -61,6 +64,9 @@ class NotGate:
 
     def evaluate(self) -> None:
         self.Q.send(not self.A.value)
+
+    def __repr__(self) -> str:
+        return f"Gate connected to {self.Q.targets}"
 
 
 class AndGate(Gate):
