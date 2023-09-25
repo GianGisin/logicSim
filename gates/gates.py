@@ -111,3 +111,21 @@ class GateType(Enum):
     NAND = 4
     NOR = 5
     XNOR = 6
+
+
+def gate_from_type(gate_type: GateType):
+    match gate_type:
+        case GateType.NOT:
+            return Not_Gate()
+        case GateType.AND:
+            return And_Gate()
+        case GateType.OR:
+            return Or_Gate()
+        case GateType.XOR:
+            return Xor_Gate()
+        case GateType.NAND:
+            return Nand_Gate()
+        case GateType.NOR:
+            return Nor_Gate()
+        case GateType.XNOR:
+            return Xnor_Gate()
