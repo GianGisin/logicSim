@@ -1,7 +1,8 @@
 from enum import Enum
 import math
+from gates import gates
 from gates.gates import GateType
-from tkinter import Tk, PhotoImage, Menu, Frame, Canvas
+from tkinter import Tk, PhotoImage, Menu, Frame, Canvas, messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
 
@@ -19,7 +20,7 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 LAMP_IMAGE_SIDE = 50
 
 # gates to simulate will be stored in dict together with their tkinter ID
-gate_list = {}
+gate_sim = {}
 
 
 class Tool(Enum):
@@ -42,8 +43,8 @@ def draw_gate(x: int, y: int, gate_type: GateType):
     x_offset = math.floor(IMAGE_SCALED_WIDTH / 2)
 
     q_pos = (x + x_offset, y)
-    a_pos = (x - x_offset, y + y_offset)
-    b_pos = (x - x_offset, y - y_offset)
+    a_pos = (x - x_offset, y - y_offset)
+    b_pos = (x - x_offset, y + y_offset)
 
     gate_id = canvas.create_image(x, y, image=gate_images[gate_type.value])
     canvas.addtag_withtag(f"gate{gate_id}", gate_id)
@@ -64,6 +65,10 @@ def draw_gate(x: int, y: int, gate_type: GateType):
             b_pos[0], b_pos[1], CIRCLE_RADIUS, tags=(f"gate{gate_id}", "B")
         )
         canvas.tag_bind(b_circ, "<Button-1>", lambda e: leftclick_on_circ(b_circ))
+
+    # add new gate to the simulation dict
+    gate_sim.update({gate_id: gates.gate_from_type(gate_type)})
+    print(gate_sim)
 
 
 def draw_lamp(x: int, y: int):
@@ -105,34 +110,51 @@ def leftclick_on_circ(id):
     if current_tool == Tool.PEN:
         # TODO more checks needed so no loops can be drawn
         l.extend([current_coords[0] + CIRCLE_RADIUS, current_coords[1] + CIRCLE_RADIUS])
-        gate_tags.append(canvas.gettags(id)[0])
+        gate_tags.append([canvas.gettags(id)[0], canvas.gettags(id)[1]])
+        # check whether there are two points
         if len(l) >= 4:
-            # draw the connection
-            dx = l[2] - l[0]
-            print("drawing line")
-            line_id = canvas.create_line(
-                [
-                    l[0],
-                    l[1],
-                    l[0] + math.floor(dx / 2),
-                    l[1],
-                    l[0] + math.floor(dx / 2),
-                    l[1],
-                    l[0] + math.floor(dx / 2),
-                    l[3],
-                    l[0] + math.floor(dx / 2),
-                    l[3],
-                    l[2],
-                    l[3],
-                ],
-                width=3,
-            )
-            canvas.tag_bind(line_id, "<Button-1>", lambda e: leftclick_on_line(line_id))
-            canvas.addtag_withtag(gate_tags[0], line_id)
-            canvas.addtag_withtag(gate_tags[1], line_id)
+            # check if desired connection is Q->A or Q->B
+            conn = {gate_tags[0][1], gate_tags[1][1]}
+            if len(conn) == 2 and "Q" in conn:
+                if gate_tags[0][0] != gate_tags[1][0]:
+                    # draw the connection
+                    dx = l[2] - l[0]
+                    print("drawing line")
+                    line_id = canvas.create_line(
+                        [
+                            l[0],
+                            l[1],
+                            l[0] + math.floor(dx / 2),
+                            l[1],
+                            l[0] + math.floor(dx / 2),
+                            l[1],
+                            l[0] + math.floor(dx / 2),
+                            l[3],
+                            l[0] + math.floor(dx / 2),
+                            l[3],
+                            l[2],
+                            l[3],
+                        ],
+                        width=3,
+                    )
+                    canvas.tag_bind(
+                        line_id, "<Button-1>", lambda e: leftclick_on_line(line_id)
+                    )
+                    canvas.addtag_withtag(gate_tags[0][0], line_id)
+                    canvas.addtag_withtag(gate_tags[1][0], line_id)
+                    print(
+                        f"created line with tags: {canvas.gettags(line_id)}\n from {gate_tags[0][1]} to {gate_tags[1][1]}"
+                    )
+                else:
+                    messagebox.showwarning(
+                        message="Cannot connect input and output belonging to the same gate."
+                    )
+            else:
+                messagebox.showwarning(
+                    message="Cannot connect two inputs or two outputs."
+                )
             l.clear()
             gate_tags.clear()
-            print(f"line now has tags: {canvas.gettags(id)}")
 
 
 def leftclick_on_line(id):
