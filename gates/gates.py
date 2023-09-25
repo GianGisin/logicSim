@@ -34,6 +34,7 @@ class Input:
     def __init__(self, name, parent, debug=False) -> None:
         self.value = None
         self.parent = parent
+        self.name = name
 
     def trigger(self, value) -> None:
         if self.value == value:
@@ -41,6 +42,9 @@ class Input:
         else:
             self.value = value
             self.parent.evaluate()
+
+    def __repr__(self) -> str:
+        return f"Input {self.name}"
 
 
 class Gate:
