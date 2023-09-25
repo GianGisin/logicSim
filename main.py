@@ -1,4 +1,5 @@
 from enum import Enum
+import sys
 import math
 from gates import gates
 from gates.gates import GateType
@@ -140,11 +141,6 @@ def leftclick_on_circ(id):
                     canvas.tag_bind(
                         line_id, "<Button-1>", lambda e: leftclick_on_line(line_id)
                     )
-                    canvas.addtag_withtag(gate_tags[0][0], line_id)
-                    canvas.addtag_withtag(gate_tags[1][0], line_id)
-                    print(
-                        f"created line with tags: {canvas.gettags(line_id)}\n from {gate_tags[0][1]} to {gate_tags[1][1]}"
-                    )
 
                     # get id out of gate tag
                     id1 = int(gate_tags[0][0].replace("gate", ""))
@@ -154,6 +150,8 @@ def leftclick_on_circ(id):
                     )
                     if gate_tags[0][1] == "Q":
                         # connection id1 -> id2
+                        canvas.addtag_withtag(gate_tags[0][0], line_id)
+                        canvas.addtag_withtag(gate_tags[1][0], line_id)
                         if gate_tags[1][1] == "A":
                             # connection id1(Q) -> id2("A")
                             gate_sim[id1].Q.connect(gate_sim[id2].A)
@@ -162,12 +160,18 @@ def leftclick_on_circ(id):
                             gate_sim[id1].Q.connect(gate_sim[id2].B)
                     elif gate_tags[1][1] == "Q":
                         # connection id2 -> id1
+                        canvas.addtag_withtag(gate_tags[1][0], line_id)
+                        canvas.addtag_withtag(gate_tags[0][0], line_id)
                         if gate_tags[0][1] == "A":
                             # connection id2(Q) -> id1("A")
                             gate_sim[id2].Q.connect(gate_sim[id1].A)
                         elif gate_tags[0][1] == "B":
                             # connection id2(Q) -> id1("B")
                             gate_sim[id2].Q.connect(gate_sim[id1].B)
+
+                    print(
+                        f"created line with tags: {canvas.gettags(line_id)}\n from {gate_tags[0][1]} to {gate_tags[1][1]}"
+                    )
 
                 else:
                     messagebox.showwarning(
@@ -188,7 +192,7 @@ def leftclick_on_line(id):
     match current_tool:
         case Tool.BIN:
             canvas.delete(id)
-            # TODO: delete connection from simulation
+            # delete connection from simulation
 
 
 def leftclick_on_gate(id):
@@ -310,6 +314,7 @@ root.title("logicSim")
 root.geometry("1000x700+0+0")
 root.option_add("*tearOff", False)
 root.bind("<Control-g>", lambda e: print(gate_sim))
+root.bind("<Control-c>", lambda e: sys.exit(0))
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
