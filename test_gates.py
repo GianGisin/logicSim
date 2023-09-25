@@ -1,6 +1,7 @@
 import unittest
 from gates.gates import *
 
+
 class Gates_test(unittest.TestCase):
     def test_not(self):
         gate = Not_Gate()
@@ -10,7 +11,7 @@ class Gates_test(unittest.TestCase):
 
         gate.A.trigger(True)
         self.assertEqual(gate.Q.state, False)
-    
+
     def test_and(self):
         gate = And_Gate()
 
@@ -70,7 +71,7 @@ class Gates_test(unittest.TestCase):
         gate.A.trigger(True)
         gate.B.trigger(True)
         self.assertEqual(gate.Q.state, False)
-    
+
     def test_nor(self):
         gate = Nor_Gate()
 
@@ -86,9 +87,24 @@ class Gates_test(unittest.TestCase):
         gate.B.trigger(True)
         self.assertEqual(gate.Q.state, False)
 
+    def test_xnor(self):
+        gate = Xnor_Gate()
+
+        gate.A.trigger(False)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, True)
+
+        gate.A.trigger(True)
+        gate.B.trigger(False)
+        self.assertEqual(gate.Q.state, False)
+
+        gate.A.trigger(True)
+        gate.B.trigger(True)
+        self.assertEqual(gate.Q.state, True)
+
     def test_half_adder(self):
-        g_xor = Xor_Gate() # sum bit
-        g_and = And_Gate() # carry bit
+        g_xor = Xor_Gate()  # sum bit
+        g_and = And_Gate()  # carry bit
 
         A = Connector("input A")
         A.connect(g_xor.A)
@@ -141,15 +157,17 @@ class Gates_test(unittest.TestCase):
         g_and2.Q.connect(g_carry.A)
 
         # truth table  A      B      Cin    Sum    Carry
-        truth_table =[[False, False, False, False, False],
-                      [False, False, True, True, False],
-                      [False, True, False, True, False],
-                      [False, True, True, False, True],
-                      [True, False, False, True, False],
-                      [True, False, True, False, True],
-                      [True, True, False, False, True],
-                      [True, True, True, True, True]]
-        
+        truth_table = [
+            [False, False, False, False, False],
+            [False, False, True, True, False],
+            [False, True, False, True, False],
+            [False, True, True, False, True],
+            [True, False, False, True, False],
+            [True, False, True, False, True],
+            [True, True, False, False, True],
+            [True, True, True, True, True],
+        ]
+
         for row in truth_table:
             A.send(row[0])
             B.send(row[1])
@@ -159,5 +177,5 @@ class Gates_test(unittest.TestCase):
             self.assertEqual(g_carry.Q.state, row[4])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
