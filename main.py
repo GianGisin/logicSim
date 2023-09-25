@@ -145,6 +145,30 @@ def leftclick_on_circ(id):
                     print(
                         f"created line with tags: {canvas.gettags(line_id)}\n from {gate_tags[0][1]} to {gate_tags[1][1]}"
                     )
+
+                    # get id out of gate tag
+                    id1 = int(gate_tags[0][0].replace("gate", ""))
+                    id2 = int(gate_tags[1][0].replace("gate", ""))
+                    print(
+                        f"making connection between\n    |id1 = {id1}\n    |id2 = {id2}"
+                    )
+                    if gate_tags[0][1] == "Q":
+                        # connection id1 -> id2
+                        if gate_tags[1][1] == "A":
+                            # connection id1(Q) -> id2("A")
+                            gate_sim[id1].Q.connect(gate_sim[id2].A)
+                        elif gate_tags[1][1] == "B":
+                            # connection id1(Q) -> id2("B")
+                            gate_sim[id1].Q.connect(gate_sim[id2].B)
+                    elif gate_tags[1][1] == "Q":
+                        # connection id2 -> id1
+                        if gate_tags[0][1] == "A":
+                            # connection id2(Q) -> id1("A")
+                            gate_sim[id2].Q.connect(gate_sim[id1].A)
+                        elif gate_tags[0][1] == "B":
+                            # connection id2(Q) -> id1("B")
+                            gate_sim[id2].Q.connect(gate_sim[id1].B)
+
                 else:
                     messagebox.showwarning(
                         message="Cannot connect input and output belonging to the same gate."
@@ -285,6 +309,7 @@ root.iconphoto(True, gate_icon)
 root.title("logicSim")
 root.geometry("1000x700+0+0")
 root.option_add("*tearOff", False)
+root.bind("<Control-g>", lambda e: print(gate_sim))
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
@@ -339,7 +364,6 @@ for i in range(len(button_text)):
         compound=button_style,
         command=lambda i=i: toolbar_event(i),
     )
-    print(f"init button with i = {i}")
     button.pack()
 
 # start event loop
