@@ -1,5 +1,8 @@
+from enum import Enum
+
+
 class Connector:
-    def __init__(self, name, debug = False) -> None:
+    def __init__(self, name, debug=False) -> None:
         self.targets = []
         self.state = None
 
@@ -14,20 +17,25 @@ class Connector:
             return
         else:
             if self.debug:
-                print("Connector now has value: " + str(value) + " compared to before: " + str(self.state))
-                
+                print(
+                    "Connector now has value: "
+                    + str(value)
+                    + " compared to before: "
+                    + str(self.state)
+                )
+
             self.state = value
 
             for target in self.targets:
                 target.trigger(value)
-        
+
 
 class Input:
-    def __init__(self, name, parent, debug = False) -> None:
+    def __init__(self, name, parent, debug=False) -> None:
         self.value = None
         self.parent = parent
 
-    def trigger(self, value) -> None: 
+    def trigger(self, value) -> None:
         if self.value == value:
             return
         else:
@@ -37,21 +45,23 @@ class Input:
 
 class Gate:
     def __init__(self) -> None:
-        self.A = Input('A', self)
-        self.B = Input('B', self)
+        self.A = Input("A", self)
+        self.B = Input("B", self)
 
-        self.Q = Connector('Q', debug=True)
+        self.Q = Connector("Q", debug=True)
 
     def evaluate(self) -> None:
         return
 
+
 class Not_Gate:
     def __init__(self) -> None:
-        self.A = Input('A', self)
-        self.Q = Connector('Q')
+        self.A = Input("A", self)
+        self.Q = Connector("Q")
 
     def evaluate(self) -> None:
         self.Q.send(not self.A.value)
+
 
 class And_Gate(Gate):
     def __init__(self) -> None:
@@ -82,7 +92,7 @@ class Nor_Gate(Gate):
         super().__init__()
 
     def evaluate(self) -> None:
-        self.Q.send(not(self.A.value or self.B.value))
+        self.Q.send(not (self.A.value or self.B.value))
 
 
 class Nand_Gate(Gate):
@@ -90,4 +100,14 @@ class Nand_Gate(Gate):
         super().__init__()
 
     def evaluate(self) -> None:
-        self.Q.send(not(self.A.value and self.B.value))
+        self.Q.send(not (self.A.value and self.B.value))
+
+
+class GateType(Enum):
+    NOT = 0
+    AND = 1
+    OR = 2
+    XOR = 3
+    NAND = 4
+    NOR = 5
+    XNOR = 6

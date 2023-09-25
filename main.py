@@ -1,5 +1,6 @@
 from enum import Enum
 import math
+from gates.gates import GateType
 from tkinter import Tk, PhotoImage, Menu, Frame, Canvas
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -17,15 +18,8 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 
 LAMP_IMAGE_SIDE = 50
 
-
-class GateType(Enum):
-    NOT = 0
-    AND = 1
-    OR = 2
-    XOR = 3
-    NAND = 4
-    NOR = 5
-    XNOR = 6
+# gates to simulate will be stored in dict together with their tkinter ID
+gate_list = {}
 
 
 class Tool(Enum):
