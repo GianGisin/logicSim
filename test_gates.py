@@ -4,7 +4,7 @@ from gates.gates import *
 
 class Gates_test(unittest.TestCase):
     def test_not(self):
-        gate = Not_Gate()
+        gate = NotGate()
 
         gate.A.trigger(False)
         self.assertEqual(gate.Q.state, True)
@@ -13,7 +13,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, False)
 
     def test_and(self):
-        gate = And_Gate()
+        gate = AndGate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -28,7 +28,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, True)
 
     def test_or(self):
-        gate = Or_Gate()
+        gate = OrGate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -43,7 +43,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, True)
 
     def test_xor(self):
-        gate = Xor_Gate()
+        gate = XorGate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -58,7 +58,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, False)
 
     def test_nand(self):
-        gate = Nand_Gate()
+        gate = NandGate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -73,7 +73,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, False)
 
     def test_nor(self):
-        gate = Nor_Gate()
+        gate = NorGate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -88,7 +88,7 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, False)
 
     def test_xnor(self):
-        gate = Xnor_Gate()
+        gate = XnorGate()
 
         gate.A.trigger(False)
         gate.B.trigger(False)
@@ -103,8 +103,8 @@ class Gates_test(unittest.TestCase):
         self.assertEqual(gate.Q.state, True)
 
     def test_half_adder(self):
-        g_xor = Xor_Gate()  # sum bit
-        g_and = And_Gate()  # carry bit
+        g_xor = XorGate()  # sum bit
+        g_and = AndGate()  # carry bit
 
         A = Connector("input A")
         A.connect(g_xor.A)
@@ -131,11 +131,11 @@ class Gates_test(unittest.TestCase):
 
     def test_full_adder(self):
         # initialize gates
-        g_xor = Xor_Gate()
-        g_sum = Xor_Gate()
-        g_carry = Or_Gate()
-        g_and1 = And_Gate()
-        g_and2 = And_Gate()
+        g_xor = XorGate()
+        g_sum = XorGate()
+        g_carry = OrGate()
+        g_and1 = AndGate()
+        g_and2 = AndGate()
 
         # initialize Inputs
         A = Connector("Input A")

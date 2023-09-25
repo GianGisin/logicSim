@@ -54,7 +54,7 @@ class Gate:
         return
 
 
-class Not_Gate:
+class NotGate:
     def __init__(self) -> None:
         self.A = Input("A", self)
         self.Q = Connector("Q")
@@ -63,7 +63,7 @@ class Not_Gate:
         self.Q.send(not self.A.value)
 
 
-class And_Gate(Gate):
+class AndGate(Gate):
     def __init__(self) -> None:
         super().__init__()
 
@@ -71,7 +71,7 @@ class And_Gate(Gate):
         self.Q.send(self.A.value and self.B.value)
 
 
-class Or_Gate(Gate):
+class OrGate(Gate):
     def __init__(self) -> None:
         super().__init__()
 
@@ -79,7 +79,7 @@ class Or_Gate(Gate):
         self.Q.send(self.A.value or self.B.value)
 
 
-class Xor_Gate(Gate):
+class XorGate(Gate):
     def __init__(self) -> None:
         super().__init__()
 
@@ -87,7 +87,7 @@ class Xor_Gate(Gate):
         self.Q.send(self.A.value != self.B.value)
 
 
-class Nor_Gate(Gate):
+class NorGate(Gate):
     def __init__(self) -> None:
         super().__init__()
 
@@ -95,7 +95,7 @@ class Nor_Gate(Gate):
         self.Q.send(not (self.A.value or self.B.value))
 
 
-class Xnor_Gate(Gate):
+class XnorGate(Gate):
     def __init__(self) -> None:
         super().__init__()
 
@@ -103,7 +103,7 @@ class Xnor_Gate(Gate):
         self.Q.send(not (self.A.value != self.B.value))
 
 
-class Nand_Gate(Gate):
+class NandGate(Gate):
     def __init__(self) -> None:
         super().__init__()
 
@@ -124,16 +124,16 @@ class GateType(Enum):
 def gate_from_type(gate_type: GateType):
     match gate_type:
         case GateType.NOT:
-            return Not_Gate()
+            return NotGate()
         case GateType.AND:
-            return And_Gate()
+            return AndGate()
         case GateType.OR:
-            return Or_Gate()
+            return OrGate()
         case GateType.XOR:
-            return Xor_Gate()
+            return XorGate()
         case GateType.NAND:
-            return Nand_Gate()
+            return NandGate()
         case GateType.NOR:
-            return Nor_Gate()
+            return NorGate()
         case GateType.XNOR:
-            return Xnor_Gate()
+            return XnorGate()
