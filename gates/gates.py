@@ -33,7 +33,7 @@ class Connector:
 
 class Input:
     def __init__(self, name, parent, debug=False) -> None:
-        self.value = None
+        self.value = False
         self.parent = parent
         self.name = name
 
@@ -70,7 +70,9 @@ class Lamp:
         # temporary
         print(f"Lamp state is now {self.A.value}")
         # call function passed into constructor
-        self.func()
+        # check whether value has changed
+        if self.A.value != None:
+            self.func()
 
     def __repr__(self) -> str:
         return f"[Lamp] with state {self.A.value}"
@@ -82,9 +84,11 @@ class Gate:
         self.B = Input("B", self)
 
         self.Q = Connector("Q", debug=True)
+        # evaluate on init
+        self.evaluate()
 
     def evaluate(self) -> None:
-        return
+        raise NotImplementedError("evaluate must be overridden")
 
     def __repr__(self) -> str:
         return f"Gate connected to {self.Q.targets}"
@@ -94,6 +98,7 @@ class NotGate:
     def __init__(self) -> None:
         self.A = Input("A", self)
         self.Q = Connector("Q")
+        self.evaluate()
 
     def evaluate(self) -> None:
         self.Q.send(not self.A.value)
