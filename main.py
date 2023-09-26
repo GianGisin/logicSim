@@ -33,6 +33,14 @@ class Tool(Enum):
     SWITCH = 5
 
 
+def clear_canvas():
+    if messagebox.askokcancel(message="Are you sure you want to clear the canvas?"):
+        gate_sim.clear()
+        canvas.delete("all")
+        l.clear()
+        gate_tags.clear()
+
+
 def draw_circle(x, y, r, fill="red", outline="red", tags=[]):
     return canvas.create_oval(
         x - r, y - r, x + r, y + r, fill=fill, outline=outline, tags=tags
@@ -320,19 +328,24 @@ root.geometry("1000x700+0+0")
 root.option_add("*tearOff", False)
 root.bind("<Control-g>", lambda e: print(gate_sim))
 root.bind("<Control-c>", lambda e: sys.exit(0))
+root.bind("<Control-Delete>", lambda e: clear_canvas())
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
 # initialize menubar
 m = Menu(root)
 m_edit = Menu(m)
-m_save = Menu(m)
+m_debug = Menu(m)
 m.add_cascade(menu=m_edit, label="Edit")
-m.add_cascade(menu=m_save, label="Save")
-m_edit.add_command(label="Paste")
-m_edit.add_command(label="Find...")
-m_save.add_command(label="Paste")
-m_save.add_command(label="Find...")
+m.add_cascade(menu=m_debug, label="Debug")
+m_edit.add_command(
+    label="Clear Canvas", command=clear_canvas, accelerator="Ctrl-Delete"
+)
+m_edit.add_command(label="--- placeholder ---")
+m_debug.add_command(
+    label="Print simulation list", command=lambda: print(gate_sim), accelerator="Ctrl-g"
+)
+m_debug.add_command(label="--- placeholder ---")
 root["menu"] = m
 
 mainframe = ttk.Frame(root)
