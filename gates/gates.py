@@ -60,13 +60,16 @@ class Switch:
 
 
 class Lamp:
-    def __init__(self, init_state=False) -> None:
+    def __init__(self, on_update=None, init_state=False) -> None:
         self.A = Input("lamp A", self)
         self.A.value = init_state
+        self.func = on_update
 
     def evaluate(self) -> None:
         # temporary
         print(f"Lamp state is now {self.A.value}")
+        # call function passed into constructor
+        self.func()
 
     def __repr__(self) -> str:
         return f"[Lamp] with state {self.A.value}"
