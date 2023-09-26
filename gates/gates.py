@@ -50,7 +50,7 @@ class Input:
 class Switch:
     def __init__(self, init_state=False) -> None:
         self.Q = Connector("Q", debug=True)
-        self.Q.state = False
+        self.Q.state = init_state
 
     def get_state(self):
         return self.Q.state
@@ -60,8 +60,9 @@ class Switch:
 
 
 class Lamp:
-    def __init__(self) -> None:
+    def __init__(self, init_state=False) -> None:
         self.A = Input("lamp A", self)
+        self.A.value = init_state
 
     def evaluate(self) -> None:
         # temporary
