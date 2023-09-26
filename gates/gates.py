@@ -47,6 +47,15 @@ class Input:
         return f"Input {self.name}"
 
 
+class Switch:
+    def __init__(self, init_state=False) -> None:
+        self.Q = Connector("Q", debug=True)
+        self.Q.state = False
+
+    def get_state(self):
+        return self.Q.state
+
+
 class Gate:
     def __init__(self) -> None:
         self.A = Input("A", self)
