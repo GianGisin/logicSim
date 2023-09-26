@@ -154,8 +154,18 @@ def leftclick_on_circ(id):
                     )
 
                     # get id out of gate tag
-                    id1 = int(gate_tags[0][0].replace("gate", ""))
-                    id2 = int(gate_tags[1][0].replace("gate", ""))
+                    id1 = int(
+                        gate_tags[0][0]
+                        .replace("gate", "")
+                        .replace("switch", "")
+                        .replace("lamp", "")
+                    )
+                    id2 = int(
+                        gate_tags[1][0]
+                        .replace("gate", "")
+                        .replace("switch", "")
+                        .replace("lamp", "")
+                    )
                     if gate_tags[0][1] == "Q":
                         # connection id1 -> id2
                         canvas.addtag_withtag(gate_tags[0][0], line_id)
