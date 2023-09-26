@@ -102,7 +102,7 @@ def draw_lamp(x: int, y: int):
     canvas.addtag_withtag(f"A", lamp_id)
     canvas.addtag_withtag("lamp_off", lamp_id)
     canvas.tag_bind(lamp_id, "<Button-1>", lambda e: leftclick_on_lamp(lamp_id))
-    sim_lamp = gates.Lamp(init_state=False)
+    sim_lamp = gates.Lamp(on_update=lambda: toggle_lamp(lamp_id), init_state=False)
     gate_sim.update({lamp_id: sim_lamp})
 
 
