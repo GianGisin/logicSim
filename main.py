@@ -269,12 +269,14 @@ def leftclick_on_switch(id):
                 # change the tag from "switch_on" to "switch_off"
                 canvas.dtag(id, "switch_on")
                 canvas.addtag_withtag("switch_off", id)
+                gate_sim[id].Q.send(False)
             else:
                 # change the image to on
                 canvas.itemconfigure(id, image=switch_on)
                 # change the tag from "switch_off" to "switch_on"
                 canvas.dtag(id, "switch_off")
                 canvas.addtag_withtag("switch_on", id)
+                gate_sim[id].Q.send(True)
 
         case Tool.BIN:
             tags = canvas.gettags(id)
