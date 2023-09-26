@@ -20,6 +20,8 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 
 LAMP_IMAGE_SIDE = 50
 
+RULE_DRAW_DIRECT_LINES = True
+
 # gates to simulate will be stored in dict together with their tkinter ID
 gate_sim = {}
 
@@ -154,23 +156,29 @@ def leftclick_on_circ(id):
                 if gate_tags[0][0] != gate_tags[1][0]:
                     # draw the connection
                     dx = l[2] - l[0]
-                    line_id = canvas.create_line(
-                        [
-                            l[0],
-                            l[1],
-                            l[0] + math.floor(dx / 2),
-                            l[1],
-                            l[0] + math.floor(dx / 2),
-                            l[1],
-                            l[0] + math.floor(dx / 2),
-                            l[3],
-                            l[0] + math.floor(dx / 2),
-                            l[3],
-                            l[2],
-                            l[3],
-                        ],
-                        width=3,
-                    )
+
+                    line_id = None
+
+                    if RULE_DRAW_DIRECT_LINES:
+                        line_id = canvas.create_line(l[0], l[1], l[2], l[3], width=3)
+                    else:
+                        line_id = canvas.create_line(
+                            [
+                                l[0],
+                                l[1],
+                                l[0] + math.floor(dx / 2),
+                                l[1],
+                                l[0] + math.floor(dx / 2),
+                                l[1],
+                                l[0] + math.floor(dx / 2),
+                                l[3],
+                                l[0] + math.floor(dx / 2),
+                                l[3],
+                                l[2],
+                                l[3],
+                            ],
+                            width=3,
+                        )
                     canvas.tag_bind(
                         line_id, "<Button-1>", lambda e: leftclick_on_line(line_id)
                     )
