@@ -59,6 +59,18 @@ class Switch:
         return f"[Switch] connected to {self.Q.targets}"
 
 
+class Lamp:
+    def __init__(self) -> None:
+        self.A = Input("lamp A", self)
+
+    def evaluate(self) -> None:
+        # temporary
+        print(f"Lamp state is now {self.A.value}")
+
+    def __repr__(self) -> str:
+        return f"[Lamp] with state {self.A.value}"
+
+
 class Gate:
     def __init__(self) -> None:
         self.A = Input("A", self)
