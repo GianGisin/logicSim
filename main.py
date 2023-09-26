@@ -21,6 +21,7 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 LAMP_IMAGE_SIDE = 50
 
 RULE_DRAW_DIRECT_LINES = True
+RULE_TOOLBAR_BUTTON_STYLE = "image"
 
 # gates to simulate will be stored in dict together with their tkinter ID
 gate_sim = {}
@@ -413,7 +414,6 @@ gateselect.grid(column=7, row=1)
 gateselect.bind("<<ComboboxSelected>>", combobox_event)
 
 borders = []
-button_style = "top"
 button_text = ["cursor", "pen", "gate", "delete", "lamp", "switch"]
 button_images = [cursor, pen, gate_icon, waste_bin, lamp, switch]
 
@@ -426,7 +426,7 @@ for i in range(len(button_text)):
         border,
         image=button_images[i],
         text=button_text[i],
-        compound=button_style,
+        compound=RULE_TOOLBAR_BUTTON_STYLE,
         command=lambda i=i: toolbar_event(i),
     )
     button.pack()
