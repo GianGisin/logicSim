@@ -34,11 +34,12 @@ class Tool(Enum):
 
 
 def clear_canvas():
-    if messagebox.askokcancel(message="Are you sure you want to clear the canvas?"):
-        gate_sim.clear()
-        canvas.delete("all")
-        l.clear()
-        gate_tags.clear()
+    if len(canvas.find_all()) != 0:
+        if messagebox.askokcancel(message="Are you sure you want to clear the canvas?"):
+            gate_sim.clear()
+            canvas.delete("all")
+            l.clear()
+            gate_tags.clear()
 
 
 def draw_circle(x, y, r, fill="red", outline="red", tags=[]):
