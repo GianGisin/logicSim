@@ -86,6 +86,8 @@ def draw_switch(x: int, y: int):
     canvas.addtag_withtag(f"Q", switch_id)
     canvas.addtag_withtag("switch_off", switch_id)
     canvas.tag_bind(switch_id, "<Button-1>", lambda e: leftclick_on_switch(switch_id))
+    sim_switch = gates.Switch(init_state=False)
+    gate_sim.update({switch_id: sim_switch})
 
 
 current_tool = 0
