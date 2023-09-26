@@ -126,6 +126,9 @@ def toolbar_event(tool_num):
         border.configure(background="grey75")
 
     current_tool = Tool(tool_num)
+    if current_tool == Tool.PEN:
+        l.clear()
+        gate_tags.clear()
     borders[tool_num].configure(background="blue")
     print(f"Toolbar event, tool {current_tool} selected. input: {tool_num}")
 
