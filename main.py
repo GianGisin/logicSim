@@ -80,6 +80,22 @@ def draw_gate(x: int, y: int, gate_type: GateType):
     print(gate_sim)
 
 
+def toggle_lamp(id):
+    # toggle switch state
+    if "lamp_on" in canvas.gettags(id):
+        # change the image to off
+        canvas.itemconfigure(id, image=lamp_off)
+        # change the tag from "lamp_on" to "lamp_off"
+        canvas.dtag(id, "lamp_on")
+        canvas.addtag_withtag("lamp_off", id)
+    else:
+        # change the image to on
+        canvas.itemconfigure(id, image=lamp_on)
+        # change the tag from "lamp_off" to "lamp_on"
+        canvas.dtag(id, "lamp_off")
+        canvas.addtag_withtag("lamp_on", id)
+
+
 def draw_lamp(x: int, y: int):
     lamp_id = canvas.create_image(x, y, image=lamp_off)
     canvas.addtag_withtag(f"lamp{lamp_id}", lamp_id)
