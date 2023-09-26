@@ -55,6 +55,9 @@ class Switch:
     def get_state(self):
         return self.Q.state
 
+    def __repr__(self) -> str:
+        return f"[Switch] connected to {self.Q.targets}"
+
 
 class Gate:
     def __init__(self) -> None:
