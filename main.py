@@ -75,6 +75,7 @@ def draw_gate(x: int, y: int, gate_type: GateType):
 def draw_lamp(x: int, y: int):
     lamp_id = canvas.create_image(x, y, image=lamp_off)
     canvas.addtag_withtag(f"lamp{lamp_id}", lamp_id)
+    canvas.addtag_withtag(f"A", lamp_id)
     canvas.addtag_withtag("lamp_off", lamp_id)
     canvas.tag_bind(lamp_id, "<Button-1>", lambda e: leftclick_on_lamp(lamp_id))
 
@@ -82,6 +83,7 @@ def draw_lamp(x: int, y: int):
 def draw_switch(x: int, y: int):
     switch_id = canvas.create_image(x, y, image=switch_off)
     canvas.addtag_withtag(f"switch{switch_id}", switch_id)
+    canvas.addtag_withtag(f"Q", switch_id)
     canvas.addtag_withtag("switch_off", switch_id)
     canvas.tag_bind(switch_id, "<Button-1>", lambda e: leftclick_on_switch(switch_id))
 
