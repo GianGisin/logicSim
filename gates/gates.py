@@ -11,6 +11,7 @@ class Connector:
 
     def connect(self, to) -> None:
         self.targets.append(to)
+        to.trigger(self.state)
 
     def send(self, value) -> None:
         if self.state == value:
