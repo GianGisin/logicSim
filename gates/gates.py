@@ -11,8 +11,15 @@ class Connector:
         self.name = name
         self.debug = debug
 
-    def disconnect(self, key):
-        return self.targets.pop(key, False)
+    def disconnect(self, key) -> bool:
+        target = self.targets.get(key, False)
+        if target:
+            target.trigger(False)
+            self.targets.pop(key)
+            return True
+        else:
+            print("Target {key} not found in targets")
+            return False
 
     def connect(self, to, key=False) -> None:
         if key:
