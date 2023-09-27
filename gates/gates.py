@@ -2,15 +2,21 @@ from enum import Enum
 
 
 class Connector:
+    counter = 0
+
     def __init__(self, name, debug=False) -> None:
-        self.targets = []
+        self.targets = {}
         self.state = None
 
         self.name = name
         self.debug = debug
 
-    def connect(self, to) -> None:
-        self.targets.append(to)
+    def connect(self, to, key=False) -> None:
+        if key:
+            self.targets.update({key: to})
+        else:
+            self.targets.update({self.counter: to})
+            self.counter += 1
         to.trigger(self.state)
 
     def send(self, value) -> None:
@@ -27,7 +33,7 @@ class Connector:
 
             self.state = value
 
-            for target in self.targets:
+            for _, target in self.targets.items():
                 target.trigger(value)
 
 
