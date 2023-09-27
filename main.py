@@ -3,7 +3,7 @@ import sys
 import math
 from gates import gates
 from gates.gates import GateType
-from tkinter import Tk, PhotoImage, Menu, Frame, Canvas, messagebox
+from tkinter import StringVar, Tk, PhotoImage, Menu, Frame, Canvas, messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
 
@@ -20,7 +20,7 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 
 LAMP_IMAGE_SIDE = 50
 
-RULE_DRAW_DIRECT_LINES = True
+RULE_DRAW_DIRECT_LINES = False
 RULE_TOOLBAR_BUTTON_STYLE = "image"
 
 # gates to simulate will be stored in dict together with their tkinter ID
@@ -367,6 +367,23 @@ def combobox_event(event):
     gateselect.selection_clear()
 
 
+def update_line_rule():
+    global RULE_DRAW_DIRECT_LINES
+    print(line_check.get())
+    val = int(line_check.get())
+    if val == 1:
+        RULE_DRAW_DIRECT_LINES = True
+    elif val == 0:
+        RULE_DRAW_DIRECT_LINES = False
+
+
+def update_button_style_rule():
+    global RULE_TOOLBAR_BUTTON_STYLE
+    RULE_TOOLBAR_BUTTON_STYLE = button_style_check.get()
+    for button in buttons:
+        button.configure(compound=RULE_TOOLBAR_BUTTON_STYLE)
+
+
 # initialize main window
 root = Tk()
 
@@ -416,12 +433,34 @@ root.bind("<Control-Delete>", lambda e: clear_canvas())
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
+
+line_check = StringVar()
+button_style_check = StringVar()
 # initialize menubar
 m = Menu(root)
+m_home = Menu(m)
 m_edit = Menu(m)
 m_debug = Menu(m)
+m_preferences = Menu(m_home)
+m.add_cascade(menu=m_home, label="logicSim")
 m.add_cascade(menu=m_edit, label="Edit")
 m.add_cascade(menu=m_debug, label="Debug")
+m_home.add_cascade(menu=m_preferences, label="Preferences")
+m_home.add_command(label="Quit", command=lambda: sys.exit(0))
+m_preferences.add_checkbutton(
+    label="Draw direct lines",
+    variable=line_check,
+    onvalue=1,
+    offvalue=0,
+    command=update_line_rule,
+)
+m_preferences.add_checkbutton(
+    label="Show toolbar text",
+    variable=button_style_check,
+    onvalue="top",
+    offvalue="image",
+    command=update_button_style_rule,
+)
 m_edit.add_command(
     label="Clear Canvas", command=clear_canvas, accelerator="Ctrl-Delete"
 )
@@ -455,6 +494,7 @@ gateselect.grid(column=7, row=1)
 gateselect.bind("<<ComboboxSelected>>", combobox_event)
 
 borders = []
+buttons = []
 button_text = ["cursor", "pen", "gate", "delete", "lamp", "switch"]
 button_images = [cursor, pen, gate_icon, waste_bin, lamp, switch]
 
@@ -470,6 +510,7 @@ for i in range(len(button_text)):
         compound=RULE_TOOLBAR_BUTTON_STYLE,
         command=lambda i=i: toolbar_event(i),
     )
+    buttons.append(button)
     button.pack()
 
 # start event loop
