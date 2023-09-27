@@ -245,16 +245,20 @@ def leftclick_on_line(id):
     )
     match current_tool:
         case Tool.BIN:
-            # delete connection from simulation
-            # get ID of output gate
-            # as the order of the tags is established in leftclick_on_circ, we can assume
-            # that the first tag is the id of the output gate
-            QID = int(canvas.gettags(id)[0].replace("gate", "").replace("switch", ""))
-            LUI = canvas.gettags(id)[2]
-            print(f"Deleting connection at gateid {QID} with identifier {LUI}")
-            # delete line from canvas
-            gate_sim[QID].Q.disconnect(LUI)
-            canvas.delete(id)
+            delete_line(id)
+
+
+def delete_line(line_id):
+    # delete connection from simulation
+    # get ID of output gate
+    # as the order of the tags is established in leftclick_on_circ, we can assume
+    # that the first tag is the id of the output gate
+    QID = int(canvas.gettags(line_id)[0].replace("gate", "").replace("switch", ""))
+    LUI = canvas.gettags(line_id)[2]
+    print(f"Deleting connection at gateid {QID} with identifier {LUI}")
+    # delete line from canvas
+    gate_sim[QID].Q.disconnect(LUI)
+    canvas.delete(line_id)
 
 
 def leftclick_on_gate(id):
@@ -268,10 +272,16 @@ def leftclick_on_gate(id):
         case Tool.BIN:
             # delete gate
             # get gate tags
-            print("at delete")
             tags = canvas.gettags(id)
             print(f"deleting objects with tag {tags[0]}")
             print(f"all objects with tag {tags[0]}: {canvas.find_withtag(tags[0])}")
+            connectors = canvas.find_withtag(f"{id}A")
+            connectors += canvas.find_withtag(f"{id}B")
+            for c in connectors:
+                delete_line(c)
+
+            # remove from simulation list
+            gate_sim.pop(id)
             canvas.delete(tags[0])
 
             # TODO:
