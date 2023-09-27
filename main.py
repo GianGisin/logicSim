@@ -240,7 +240,9 @@ def leftclick_on_circ(id):
                             f"making connection between\n    |gate{id1} ({gate_tags[0][1]})\n    |gate{id2} ({gate_tags[1][1]})\n    |tags {canvas.gettags(line_id)}"
                         )
                     else:
-                        messagebox.showwarning(message="Cannot have two lines to input")
+                        messagebox.showwarning(
+                            message="Cannot have two lines to the same input"
+                        )
 
                 else:
                     messagebox.showwarning(
@@ -299,9 +301,6 @@ def leftclick_on_gate(id):
             gate_sim.pop(id)
             canvas.delete(tags[0])
 
-            # TODO:
-            # - delete gate from simulation
-
 
 def leftclick_on_lamp(id):
     print(
@@ -312,7 +311,13 @@ def leftclick_on_lamp(id):
             leftclick_on_circ(id)
         case Tool.BIN:
             tags = canvas.gettags(id)
-            canvas.delete(tags[0])
+            # remove lamp from simulation, including connections
+            connectors = canvas.find_withtag(f"{id}A")
+            for c in connectors:
+                delete_line(c)
+            gate_sim.pop(id)
+            # remove from canvas
+            canvas.delete(id)
 
 
 def leftclick_on_switch(id):
@@ -342,6 +347,9 @@ def leftclick_on_switch(id):
 
         case Tool.BIN:
             tags = canvas.gettags(id)
+            # remove switch from simulation
+            gate_sim.pop(id)
+            # remove from canvas
             canvas.delete(tags[0])
 
 
