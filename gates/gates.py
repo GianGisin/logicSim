@@ -11,6 +11,9 @@ class Connector:
         self.name = name
         self.debug = debug
 
+    def disconnect(self, key):
+        return self.targets.pop(key, False)
+
     def connect(self, to, key=False) -> None:
         if key:
             self.targets.update({key: to})
@@ -18,6 +21,7 @@ class Connector:
             self.targets.update({self.counter: to})
             self.counter += 1
         to.trigger(self.state)
+        print(f"Q.targets: {self.targets}")
 
     def send(self, value) -> None:
         if self.state == value:
