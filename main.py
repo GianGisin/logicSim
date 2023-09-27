@@ -152,6 +152,7 @@ def leftclick_on_circ(id):
         # check whether there are two points
         if len(l) >= 4:
             # check if desired connection is Q->A or Q->B
+            # using properties of the "set" datastructure
             conn = {gate_tags[0][1], gate_tags[1][1]}
             if len(conn) == 2 and "Q" in conn:
                 if gate_tags[0][0] != gate_tags[1][0]:
@@ -159,30 +160,6 @@ def leftclick_on_circ(id):
                     dx = l[2] - l[0]
 
                     line_id = None
-
-                    if RULE_DRAW_DIRECT_LINES:
-                        line_id = canvas.create_line(l[0], l[1], l[2], l[3], width=3)
-                    else:
-                        line_id = canvas.create_line(
-                            [
-                                l[0],
-                                l[1],
-                                l[0] + math.floor(dx / 2),
-                                l[1],
-                                l[0] + math.floor(dx / 2),
-                                l[1],
-                                l[0] + math.floor(dx / 2),
-                                l[3],
-                                l[0] + math.floor(dx / 2),
-                                l[3],
-                                l[2],
-                                l[3],
-                            ],
-                            width=3,
-                        )
-                    canvas.tag_bind(
-                        line_id, "<Button-1>", lambda e: leftclick_on_line(line_id)
-                    )
 
                     # get id out of gate tag
                     id1 = int(
@@ -198,34 +175,72 @@ def leftclick_on_circ(id):
                         .replace("lamp", "")
                     )
                     LUI = ""
+                    tags = []
+                    ids_ordered = []
+                    is_A = None
                     if gate_tags[0][1] == "Q":
                         # connection id1 -> id2
-                        canvas.addtag_withtag(gate_tags[0][0], line_id)
-                        canvas.addtag_withtag(gate_tags[1][0], line_id)
-                        if gate_tags[1][1] == "A":
-                            # connection id1(Q) -> id2("A")
-                            LUI = f"{id2}A"
-                            gate_sim[id1].Q.connect(gate_sim[id2].A, key=LUI)
-                        elif gate_tags[1][1] == "B":
-                            # connection id1(Q) -> id2("B")
-                            LUI = f"{id2}B"
-                            gate_sim[id1].Q.connect(gate_sim[id2].B, key=LUI)
+                        tags.append(gate_tags[0][0])
+                        tags.append(gate_tags[1][0])
+                        ids_ordered.extend([id1, id2])
+                        is_A = gate_tags[1][1] == "A"
                     elif gate_tags[1][1] == "Q":
                         # connection id2 -> id1
-                        canvas.addtag_withtag(gate_tags[1][0], line_id)
-                        canvas.addtag_withtag(gate_tags[0][0], line_id)
-                        if gate_tags[0][1] == "A":
-                            # connection id2(Q) -> id1("A")
-                            LUI = f"{id1}A"
-                            gate_sim[id2].Q.connect(gate_sim[id1].A, key=LUI)
-                        elif gate_tags[0][1] == "B":
-                            # connection id2(Q) -> id1("B")
-                            LUI = f"{id1}B"
-                            gate_sim[id2].Q.connect(gate_sim[id1].B, key=LUI)
-                    canvas.addtag_withtag(LUI, line_id)
-                    print(
-                        f"making connection between\n    |gate{id1} ({gate_tags[0][1]})\n    |gate{id2} ({gate_tags[1][1]})\n    |tags {canvas.gettags(line_id)}"
-                    )
+                        tags.append(gate_tags[1][0])
+                        tags.append(gate_tags[0][0])
+                        ids_ordered.extend([id2, id1])
+                        is_A = gate_tags[0][1] == "A"
+
+                    LUI = f"{ids_ordered[1]}"
+                    if is_A:
+                        LUI += "A"
+                    else:
+                        LUI += "B"
+
+                    if len(canvas.find_withtag(LUI)) == 0:
+                        if is_A:
+                            gate_sim[ids_ordered[0]].Q.connect(
+                                gate_sim[ids_ordered[1]].A, key=LUI
+                            )
+                        else:
+                            gate_sim[ids_ordered[0]].Q.connect(
+                                gate_sim[ids_ordered[1]].B, key=LUI
+                            )
+
+                        if RULE_DRAW_DIRECT_LINES:
+                            line_id = canvas.create_line(
+                                l[0], l[1], l[2], l[3], width=3
+                            )
+                        else:
+                            line_id = canvas.create_line(
+                                [
+                                    l[0],
+                                    l[1],
+                                    l[0] + math.floor(dx / 2),
+                                    l[1],
+                                    l[0] + math.floor(dx / 2),
+                                    l[1],
+                                    l[0] + math.floor(dx / 2),
+                                    l[3],
+                                    l[0] + math.floor(dx / 2),
+                                    l[3],
+                                    l[2],
+                                    l[3],
+                                ],
+                                width=3,
+                            )
+                        canvas.tag_bind(
+                            line_id, "<Button-1>", lambda e: leftclick_on_line(line_id)
+                        )
+
+                        for tag in tags:
+                            canvas.addtag_withtag(tag, line_id)
+                        canvas.addtag_withtag(LUI, line_id)
+                        print(
+                            f"making connection between\n    |gate{id1} ({gate_tags[0][1]})\n    |gate{id2} ({gate_tags[1][1]})\n    |tags {canvas.gettags(line_id)}"
+                        )
+                    else:
+                        messagebox.showwarning(message="Cannot have two lines to input")
 
                 else:
                     messagebox.showwarning(
