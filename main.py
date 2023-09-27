@@ -197,26 +197,32 @@ def leftclick_on_circ(id):
                         .replace("switch", "")
                         .replace("lamp", "")
                     )
+                    LUI = ""
                     if gate_tags[0][1] == "Q":
                         # connection id1 -> id2
                         canvas.addtag_withtag(gate_tags[0][0], line_id)
                         canvas.addtag_withtag(gate_tags[1][0], line_id)
                         if gate_tags[1][1] == "A":
                             # connection id1(Q) -> id2("A")
-                            gate_sim[id1].Q.connect(gate_sim[id2].A)
+                            LUI = f"{id2}A"
+                            gate_sim[id1].Q.connect(gate_sim[id2].A, key=LUI)
                         elif gate_tags[1][1] == "B":
                             # connection id1(Q) -> id2("B")
-                            gate_sim[id1].Q.connect(gate_sim[id2].B)
+                            LUI = f"{id2}B"
+                            gate_sim[id1].Q.connect(gate_sim[id2].B, key=LUI)
                     elif gate_tags[1][1] == "Q":
                         # connection id2 -> id1
                         canvas.addtag_withtag(gate_tags[1][0], line_id)
                         canvas.addtag_withtag(gate_tags[0][0], line_id)
                         if gate_tags[0][1] == "A":
                             # connection id2(Q) -> id1("A")
-                            gate_sim[id2].Q.connect(gate_sim[id1].A)
+                            LUI = f"{id1}A"
+                            gate_sim[id2].Q.connect(gate_sim[id1].A, key=LUI)
                         elif gate_tags[0][1] == "B":
                             # connection id2(Q) -> id1("B")
-                            gate_sim[id2].Q.connect(gate_sim[id1].B)
+                            LUI = f"{id1}B"
+                            gate_sim[id2].Q.connect(gate_sim[id1].B, key=LUI)
+                    canvas.addtag_withtag(LUI, line_id)
                     print(
                         f"making connection between\n    |gate{id1} ({gate_tags[0][1]})\n    |gate{id2} ({gate_tags[1][1]})\n    |tags {canvas.gettags(line_id)}"
                     )
@@ -243,9 +249,11 @@ def leftclick_on_line(id):
             # get ID of output gate
             # as the order of the tags is established in leftclick_on_circ, we can assume
             # that the first tag is the id of the output gate
-            QID = int(canvas.gettags(id)[0].replace("gate", ""))
-            print(f"Deleting connection at gateid {QID}")
+            QID = int(canvas.gettags(id)[0].replace("gate", "").replace("switch", ""))
+            LUI = canvas.gettags(id)[2]
+            print(f"Deleting connection at gateid {QID} with identifier {LUI}")
             # delete line from canvas
+            gate_sim[QID].Q.disconnect(LUI)
             canvas.delete(id)
 
 
