@@ -1,6 +1,7 @@
 from enum import Enum
 import sys
 import math
+from util import conf
 from gates import gates
 from gates.gates import GateType
 from tkinter import StringVar, Tk, PhotoImage, Menu, Frame, Canvas, messagebox
@@ -20,8 +21,9 @@ IMAGE_SCALED_HEIGHT = math.floor(IMAGE_HEIGHT * IMAGE_SCALE_FACTOR)
 
 LAMP_IMAGE_SIDE = 50
 
-RULE_DRAW_DIRECT_LINES = False
-RULE_TOOLBAR_BUTTON_STYLE = "image"
+conf.load_config()
+RULE_DRAW_DIRECT_LINES = conf.get_option_bool("drawdirectlines")
+RULE_TOOLBAR_BUTTON_STYLE = conf.get_option("toolbarbuttonstyle")
 
 # gates to simulate will be stored in dict together with their tkinter ID
 gate_sim = {}
@@ -373,13 +375,16 @@ def update_line_rule():
     val = int(line_check.get())
     if val == 1:
         RULE_DRAW_DIRECT_LINES = True
+        conf.set_option("drawdirectlines", "true")
     elif val == 0:
         RULE_DRAW_DIRECT_LINES = False
+        conf.set_option("drawdirectlines", "false")
 
 
 def update_button_style_rule():
     global RULE_TOOLBAR_BUTTON_STYLE
     RULE_TOOLBAR_BUTTON_STYLE = button_style_check.get()
+    conf.set_option("toolbarbuttonstyle", RULE_TOOLBAR_BUTTON_STYLE)
     for button in buttons:
         button.configure(compound=RULE_TOOLBAR_BUTTON_STYLE)
 
@@ -428,14 +433,14 @@ root.title("logicSim")
 root.geometry("1000x700+0+0")
 root.option_add("*tearOff", False)
 root.bind("<Control-g>", lambda e: print(gate_sim))
-root.bind("<Control-c>", lambda e: sys.exit(0))
+root.bind("<Control-q>", lambda e: sys.exit(0))
 root.bind("<Control-Delete>", lambda e: clear_canvas())
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
 
-line_check = StringVar()
-button_style_check = StringVar()
+line_check = StringVar(value=RULE_DRAW_DIRECT_LINES)
+button_style_check = StringVar(value=RULE_TOOLBAR_BUTTON_STYLE)
 # initialize menubar
 m = Menu(root)
 m_home = Menu(m)
@@ -446,12 +451,12 @@ m.add_cascade(menu=m_home, label="logicSim")
 m.add_cascade(menu=m_edit, label="Edit")
 m.add_cascade(menu=m_debug, label="Debug")
 m_home.add_cascade(menu=m_preferences, label="Preferences")
-m_home.add_command(label="Quit", command=lambda: sys.exit(0))
+m_home.add_command(label="Quit", command=lambda: sys.exit(0), accelerator="Ctrl-q")
 m_preferences.add_checkbutton(
     label="Draw direct lines",
     variable=line_check,
-    onvalue=1,
-    offvalue=0,
+    onvalue=True,
+    offvalue=False,
     command=update_line_rule,
 )
 m_preferences.add_checkbutton(
