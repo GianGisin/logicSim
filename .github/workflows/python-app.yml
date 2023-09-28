@@ -39,3 +39,5 @@ jobs:
         python test_gates.py
     - name: Count Lines of Code (cloc)
       uses: djdefi/cloc-action@5
+      run: |
+        cloc
