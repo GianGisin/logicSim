@@ -1,7 +1,7 @@
 from enum import Enum
 import sys
 import math
-from util import conf
+from util import conf, examples
 from gates import gates
 from gates.gates import GateType
 from tkinter import StringVar, Tk, PhotoImage, Menu, Frame, Canvas, messagebox
@@ -38,9 +38,17 @@ class Tool(Enum):
     SWITCH = 5
 
 
-def clear_canvas():
+def clear_canvas(forced=False):
     if len(canvas.find_all()) != 0:
-        if messagebox.askokcancel(message="Are you sure you want to clear the canvas?"):
+        if not forced:
+            if messagebox.askokcancel(
+                message="Are you sure you want to clear the canvas?"
+            ):
+                gate_sim.clear()
+                canvas.delete("all")
+                l.clear()
+                gate_tags.clear()
+        else:
             gate_sim.clear()
             canvas.delete("all")
             l.clear()
@@ -142,12 +150,12 @@ l = []
 gate_tags = []
 
 
-def leftclick_on_circ(id):
+def leftclick_on_circ(id, eg=False):
     current_coords = canvas.coords(id)
     print(
         f"Click on circle with id {id} and coords {current_coords} and tags {canvas.gettags(id)}"
     )
-    if current_tool == Tool.PEN:
+    if current_tool == Tool.PEN or eg:
         # TODO more checks needed so no loops can be drawn
         l.extend([current_coords[0] + CIRCLE_RADIUS, current_coords[1] + CIRCLE_RADIUS])
         gate_tags.append([canvas.gettags(id)[0], canvas.gettags(id)[1]])
@@ -438,6 +446,7 @@ root.bind("<Control-Delete>", lambda e: clear_canvas())
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
+eg = examples.ExDraw(draw_switch, draw_lamp, draw_gate, leftclick_on_circ, clear_canvas)
 
 line_check = StringVar(value=RULE_DRAW_DIRECT_LINES)
 button_style_check = StringVar(value=RULE_TOOLBAR_BUTTON_STYLE)
@@ -447,6 +456,7 @@ m_home = Menu(m)
 m_edit = Menu(m)
 m_debug = Menu(m)
 m_preferences = Menu(m_home)
+m_examples = Menu(m_debug)
 m.add_cascade(menu=m_home, label="logicSim")
 m.add_cascade(menu=m_edit, label="Edit")
 m.add_cascade(menu=m_debug, label="Debug")
@@ -473,7 +483,11 @@ m_edit.add_command(label="--- placeholder ---")
 m_debug.add_command(
     label="Print simulation list", command=lambda: print(gate_sim), accelerator="Ctrl-g"
 )
-m_debug.add_command(label="--- placeholder ---")
+m_debug.add_cascade(menu=m_examples, label="Load example")
+for example in eg.examples:
+    m_examples.add_command(
+        label=example, command=lambda example=example: eg.draw_example(example)
+    )
 root["menu"] = m
 
 mainframe = ttk.Frame(root)
