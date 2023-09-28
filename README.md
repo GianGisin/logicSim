@@ -2,7 +2,7 @@
 This program allows the user to draw and simulate simple logic circuits
 
 ## Installation
-1. Make sure python is installed on your system.
+1. Make sure Python is installed on your system.
 ```bash
 python --version
 ```
@@ -21,3 +21,6 @@ To launch the application, change your directory to logicSim and execute:
 ```bash
 python main.py
 ```
+
+### Note on python version
+For both the Python interpreter as well as the package manager it might on some systems be necessary to specify whether Python 2 or Python 3 should be used. In this case, the commands `python3` and `pip3` should be used during the installation.
