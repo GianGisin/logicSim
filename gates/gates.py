@@ -1,4 +1,5 @@
 from enum import Enum
+from abc import ABC, abstractmethod
 
 
 class Connector:
@@ -95,7 +96,7 @@ class Lamp:
         return f"[Lamp] with state {self.A.value}"
 
 
-class Gate:
+class Gate(ABC):
     def __init__(self) -> None:
         self.A = Input("A", self)
         self.B = Input("B", self)
@@ -104,8 +105,9 @@ class Gate:
         # evaluate on init
         self.evaluate()
 
+    @abstractmethod
     def evaluate(self) -> None:
-        raise NotImplementedError("evaluate must be overridden")
+        pass
 
     def __repr__(self) -> str:
         return f"Gate connected to {self.Q.targets}"
