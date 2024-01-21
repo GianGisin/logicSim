@@ -113,6 +113,14 @@ class Gate(ABC):
         return f"Gate connected to {self.Q.targets}"
 
 
+class NewGate(Gate):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def evaluate(self) -> None:
+        self.Q.send(self.A.value != self.B.value)
+
+
 class NotGate:
     def __init__(self) -> None:
         self.A = Input("A", self)
