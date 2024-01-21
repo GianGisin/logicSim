@@ -176,6 +176,20 @@ class Gates_test(unittest.TestCase):
             self.assertEqual(g_sum.Q.state, row[3])
             self.assertEqual(g_carry.Q.state, row[4])
 
+    def test_new_gate(self):
+        gate = NewGate()
+
+        truth_table = [[False, False, False],
+                       [False, True, True],
+                       [True, False, True],
+                       [True, True, False]]
+        
+        for row in truth_table:
+            gate.A.trigger(row[0])
+            gate.B.trigger(row[1])
+
+            self.assertEqual(gate.Q.state, row[2])
+
 
 if __name__ == "__main__":
     unittest.main()
