@@ -190,6 +190,7 @@ class GateType(Enum):
     NAND = 4
     NOR = 5
     XNOR = 6
+    NEW = 7
 
 
 def gate_from_type(gate_type: GateType):
@@ -208,3 +209,5 @@ def gate_from_type(gate_type: GateType):
             return NorGate()
         case GateType.XNOR:
             return XnorGate()
+        case GateType.NEW:
+            return NewGate()
