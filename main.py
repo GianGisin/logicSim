@@ -8,7 +8,7 @@ from tkinter import StringVar, Tk, PhotoImage, Menu, Frame, Canvas, messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-GATE_NAMES = ("NOT", "AND", "OR", "XOR", "NAND", "NOR", "XNOR")
+GATE_NAMES = ("NOT", "AND", "OR", "XOR", "NAND", "NOR", "XNOR", "NEW")
 
 CIRCLE_RADIUS = 5
 
